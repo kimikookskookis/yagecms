@@ -26,13 +26,13 @@
 		 // METHODS
 		//
 		
-		public function Populate(/*(array<Record>)*/ $objects)
+		public function Populate(/*(array)*/ $objects)
 		{
 			$records = $this->records;
 			
 			foreach($objects as $object)
 			{
-				$records[] = $object;
+				$records[] = new Record($object);
 				$this->numberofrecords++;
 			}
 			
@@ -75,6 +75,7 @@
 			{
 				case "NumberOfRecords": return $this->GetNumberOfRecords();
 				case "CurrentRecord": return $this->GetCurrentRecord();
+				case "HasRecords": return $this->GetHasRecords();
 			}
 		}
 		
@@ -90,6 +91,11 @@
 		private function GetCurrentRecord()
 		{
 			return $this->records[$this->currentposition];
+		}
+		
+		private function GetHasRecords()
+		{
+			return ($this->numberofrecords>0?true:false);
 		}
 		
 	}

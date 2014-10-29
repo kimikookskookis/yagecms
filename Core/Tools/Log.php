@@ -48,7 +48,7 @@
 		public function _($message, $type = LogItem::TYPE_INFO)
 		{
 			$item = new LogItem($type, $message);
-			$this->items[] = $item;
+			$this->items[$item->Code] = $item;
 			
 			if(ConfigurationManager::Instance()->GetParameter("Log.".$this->name.".AutoWrite") == "YES")
 			{
@@ -63,7 +63,12 @@
 				fclose($fileHandler);
 			}
 			
-			return $item->Code;
+			return $this->name.":".$item->Code;
+		}
+		
+		public function GetLogItemByCode($code)
+		{
+			return $this->items[$code];
 		}
 	}
 	
@@ -128,6 +133,7 @@
 			switch($field)
 			{
 				case "Code": return $this->GetCode();
+				case "Message": return $this->GetMessage();
 			}
 		}
 		
@@ -138,6 +144,11 @@
 		private function GetCode()
 		{
 			return $this->code;
+		}
+		
+		private function GetMessage()
+		{
+			return $this->message;
 		}
 		
 		  //

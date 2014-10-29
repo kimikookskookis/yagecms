@@ -1,6 +1,7 @@
 <?php
 	require_once "Core/Yage.php";
 	require_once "Core/Tools/Classloader.php";
+	require_once "Core/Exception/BaseException.php";
 	require_once "Core/Tools/LogManager.php";
 	require_once "Core/Tools/Log.php";
 	
@@ -16,8 +17,18 @@
 		YageCMS\Core\Yage::Main();
 		
 	} catch(\Exception $e) {
-		echo "<h1>Uncaught Exception!</h1>	<p><strong>Message:</strong> ".$e->getMessage()."</p>";
+		
+		$code = $e->getMessage();
+		$code = explode(":",$code);
+		$log = $code[0];
+		$code = $code[1];
+			
+		$log = YageCMS\Core\Tools\LogManager::Instance()->GetLog($log);
+		$item = $log->GetLogItemByCode($code);
+		
+		echo "<h1>Uncaught Exception!</h1>	<p><strong>Type:</strong> ".get_class($e)."<br/><strong>Message:</strong> ".$item->Message."<br/><strong>Code:</strong> ".$item->Code."</p>";
 		echo "<p>Line ".$e->getLine()." in ".$e->getFile()."</p>";
+		
 		echo "<p><pre><code>".print_r($e->getTrace(),true)."</code></pre></p>";
 	}
 ?>

@@ -14,6 +14,8 @@
 			
 			try
 			{
+				$connection->Connect();
+				
 				$statement = $connection->PDO->prepare($sqlQuery);
 				
 				if(count($parameters))
@@ -138,13 +140,14 @@
 			{
 				$resultSet = $this->Read($sqlQuery, $parameters, $connection);
 				
-				if(!$resultSet->HasDatasets)
+				if(!$resultSet->HasRecords)
 				{
 					return null;
 				}
 				
 				$resultSet->MoveToFirstRecord();
 				$record = $resultSet->CurrentRecord;
+				
 				
 				return $record;
 			}

@@ -18,4 +18,15 @@
 	 */
 	 
 	class EventPositioningModeInvalidException extends BaseException {}
+	
+	/*
+	 * Database Record
+	 */
+	 
+	class DataSetFieldNotDefinedException extends BaseException {}
+	
+	class SetterNotDeclaredException extends BaseException {}
+	class GetterNotDeclaredException extends BaseException {}
+	
+	class UserNotFoundException extends BaseException {}
 ?>

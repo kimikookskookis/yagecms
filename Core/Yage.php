@@ -1,12 +1,23 @@
 <?php
 	namespace YageCMS\Core;
 	
-	use YageCMS\Core\Tools\EventManager;
+	use \YageCMS\Core\Tools\EventManager;
+	use \YageCMS\Core\DomainAccess\WebsiteAccess;
+	use \YageCMS\Core\Domain\Website;
 	
 	class Yage
 	{
 		public static function Main()
 		{
+			DatabaseInterface\ConnectionManager::ImportConnectionsFromConfiguration();
+			
+			$website = WebsiteAccess::Instance()->GetByHostname($_SERVER["HTTP_HOST"]);
+			
+			if(!is_null($website))
+			{
+				Website::SetCurrentWebsite($website);
+			}
+			
 			/*
 			 * Use this event to call functions before anything else has been executed
 			 */
@@ -23,21 +34,7 @@
 			 */
 			EventManager::Instance()->TriggerEvent("YageCMS.PostRendering");
 			
-			//DatabaseInterface\ConnectionManager::Instance()->ImportConnectionsFromConfiguration();
-			/*
-			$con = new DatabaseInterface\Drivers\MySQL("default","localhost","webshop","root","");
-			$con = DatabaseInterface\ConnectionManager::Instance()->GetConnection("default");
-			$con->Connect();
-			$con->Disconnect();
-			var_dump($con);
-			 */
-			 var_dump($_SERVER);
-			 var_dump(Tools\ConfigurationManager::Instance());
-			 var_dump(Tools\LogManager::Instance());
-			 echo "<hr/>";
-			 
-			DatabaseInterface\ConnectionManager::ImportConnectionsFromConfiguration();
-			 var_dump(DatabaseInterface\ConnectionManager::Instance());
+			var_dump(Website::GetCurrentWebsite());
 		}
 	}
 ?>

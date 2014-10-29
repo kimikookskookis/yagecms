@@ -2,6 +2,7 @@
 	namespace YageCMS\Core\DatabaseInterface;
 	
 	use \YageCMS\Core\Tools\LogManager;
+	use \YageCMS\Core\Exception\DataSetFieldNotDefinedException;
 	
 	class Record
 	{
@@ -35,7 +36,7 @@
 		
 		private function GetValue($field)
 		{
-			if(!isset($this->data->$field))
+			if(!property_exists($this->data, $field))
 			{
 				$logcode = LogManager::_("Record field '".$field."' not defined");
 				throw new DataSetFieldNotDefinedException($logcode);

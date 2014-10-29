@@ -1,6 +1,10 @@
 <?php
 	namespace YageCMS\Core\Domain;
 	
+	use YageCMS\Core\Tools\LogManager;
+	use YageCMS\Core\Exception\SetterNotDeclaredException;
+	use YageCMS\Core\Exception\GetterNotDeclaredException;
+	
 	abstract class DomainObject
 	{
 		  //
@@ -9,8 +13,11 @@
 		
 		private /*(int)*/ $id;
 		private /*(int)*/ $created;
+		private /*(User)*/ $createdby;
 		private /*(int)*/ $modified;
+		private /*(User)*/ $modifiedby;
 		private /*(int)*/ $deleted;
+		private /*(User)*/ $deletedby;
 		private /*(boolean)*/ $stored;
 		private /*(array<string>)*/ $changedfields;
 		
@@ -57,24 +64,76 @@
 		 // GETTERS/SETTERS
 		//
 		
+		# ID
+		
 		private function GetID()
 		{
 			return $this->id;
 		}
+		
+		private function SetID($value)
+		{
+			$this->id = $value;
+		}
+		
+		# Created
 		
 		private function GetCreated()
 		{
 			return $this->created;
 		}
 		
+		private function SetCreated($value)
+		{
+			$this->created = $value;
+		}
+		
+		# CreatedBy
+		
+		private function GetCreatedBy()
+		{
+			return $this->createdby;
+		}
+		
+		private function SetCreatedBy(User $value = null)
+		{
+			$this->createdby = $value;
+		}
+		
+		# Modified
+		
 		private function GetModified()
 		{
 			return $this->modified;
 		}
 		
+		private function SetModified($value)
+		{
+			$this->modified = $value;
+		}
+		
+		# ModifiedBy
+		
+		private function GetModifiedBy()
+		{
+			return $this->modifiedby;
+		}
+		
+		private function SetModifiedBy(User $value = null)
+		{
+			$this->modifiedby = $value;
+		}
+		
+		# Deleted
+		
 		private function GetDeleted()
 		{
 			return $this->deleted;
+		}
+		
+		private function SetDeleted($value)
+		{
+			$this->deleted = $value;
 		}
 		
 		private function GetIsDeleted()
@@ -82,11 +141,26 @@
 			return ($this->deleted ? true : false);
 		}
 		
+		# DeletedBy
+		
+		private function GetDeletedBy()
+		{
+			return $this->deletedby;
+		}
+		
+		private function SetDeletedBy(User $value = null)
+		{
+			$this->deletedby = $value;
+		}
+		
+		# Stored
+		
 		private function GetIsStored()
 		{
 			return $this->stored;
 		}
 		
+		# Changed Fields
 		private function GetChangedFields()
 		{
 			return $this->changedfields;
@@ -98,45 +172,63 @@
 		
 		final public function __get($field)
 		{
-			$method = "Get".$field;
-			$class = get_called_class();
-			
-			if(!method_exists($this, $method))
+			switch($field)
 			{
-				throw new GetterNotDeclaredException($class."->".$method);
+				#case "ID": return $this->GetID();
+				default:
+					$method = "Get".$field;
+					$class = get_called_class();
+					
+					if(!method_exists($this, $method))
+					{
+						$logcode = LogManager::_("No Getter defined in '".$class."->".$method."'");
+						throw new GetterNotDeclaredException($logcode);
+					}
+					
+					// Find the method
+					$method = new \ReflectionMethod($class, $method);
+					$method->setAccessible(true);
+					
+					// And execute it
+					$value = $method->invoke($this);
+					$method->setAccessible(false);
+					
+					return $value;
 			}
-			
-			// Find the method
-			$method = new ReflectionMethod($class, $method);
-			
-			// And execute it
-			return $method->invoke($this);
 		}
 		
 		final public function __set($field, $value)
 		{
-			$method = "Set".$field;
-			$class = get_called_class();
-			
-			// Check if the current value (if any) equals the new value
-			// If it doesn't, the field is to be declared as changed
-			$currentValue = $this->__get($field);
-			
-			if($currentValue <> $value)
+			switch($field)
 			{
-				$this->changedfields[] = $field;
+				default:
+					$method = "Set".$field;
+					$class = get_called_class();
+					
+					// Check if the current value (if any) equals the new value
+					// If it doesn't, the field is to be declared as changed
+					$currentValue = $this->__get($field);
+					
+					if($currentValue <> $value)
+					{
+						$this->changedfields[] = $field;
+					}
+					
+					if(!method_exists($this, $method))
+					{
+						$logcode = LogManager::_("No Setter defined in '".$class."->".$method."'");
+						throw new SetterNotDeclaredException($logcode);
+					}
+					
+					// Find the method
+					$method = new \ReflectionMethod($class, $method);
+					$method->setAccessible(true);
+					
+					// And execute it
+					$method->invokeArgs($this, array($value));
+					$method->setAccessible(false);
+					break;
 			}
-			
-			if(!method_exists($this, $method))
-			{
-				throw new SetterNotDeclaredException($class."->".$method);
-			}
-			
-			// Find the method
-			$method = new ReflectionMethod($class, $method);
-			
-			// And execute it
-			$method->invokeArgs($this, array($value));
 		}
 		
 	}

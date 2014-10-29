@@ -24,5 +24,25 @@
 		{
 			$this->hostname = $value;
 		}
+		
+		  //
+		 // VARIABLES
+		//
+		
+		private static /*(Website)*/ $current;
+		
+		  //
+		 // FUNCTIONS
+		//
+		
+		public static function GetCurrentWebsite()
+		{
+			return self::$current;
+		}
+		
+		public static function SetCurrentWebsite(Website $value)
+		{
+			self::$current = $value;
+		}
 	}
 ?>
