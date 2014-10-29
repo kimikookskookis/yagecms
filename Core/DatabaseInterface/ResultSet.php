@@ -69,7 +69,14 @@
 		 // PROPERTIES
 		//
 		
-		
+		public function __get($field)
+		{
+			switch($field)
+			{
+				case "NumberOfRecords": return $this->GetNumberOfRecords();
+				case "CurrentRecord": return $this->GetCurrentRecord();
+			}
+		}
 		
 		  //
 		 // GETTERS / SETTERS
