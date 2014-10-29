@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<GlobalConfiguration>
+	<FileMapping>
+		<LocalConfiguration>Configuration/LocalConfiguration.xml</LocalConfiguration>
+		<LocaleDirectory>{$local:FileMapping.LocalConfiguration}/Locales</LocaleDirectory>
+		<PasswordSalts>{$local:FileMapping.LocalConfiguration}/PasswordSalts.xml</PasswordSalts>
+	</FileMapping>
+	
+	<DefaultLocale>en</DefaultLocale>
+</GlobalConfiguration>
