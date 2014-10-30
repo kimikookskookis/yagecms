@@ -3,6 +3,9 @@
 	
 	use \YageCMS\Core\Tools\ConfigurationManager;
 	use \YageCMS\Core\Tools\RequestHeader;
+	use \YageCMS\Core\Domain\UserGroup;
+	use \YageCMS\Core\Tools\StringTools;
+	use \YageCMS\Core\Tools\SaltManager;
 	
 	class User extends WebsiteDomainObject
 	{
@@ -14,6 +17,7 @@
 		private /*(string)*/ $password;
 		private /*(string)*/ $passwordsalt;
 		private /*(string)*/ $emailaddress;
+		private /*(UserGroup)*/ $usergroup;
 		
 		  //
 		 // GETTERS/SETTERS
@@ -67,6 +71,18 @@
 			$this->emailaddress = $value;
 		}
 		
+		# UserGroup
+		
+		private function GetUserGroup()
+		{
+			return $this->usergroup;
+		}
+		
+		private function SetUserGroup(UserGroup $value)
+		{
+			$this->usergroup = $value;
+		}
+		
 		  //
 		 // FUNCTIONS
 		//
@@ -88,6 +104,28 @@
 			{
 				$newUser = new User;
 				
+				$password = md5(StringTools::GenerateGUID());
+				
+				// Hash with global salt
+				$globalSalt = SaltManager::Instance()->GetSalt(time());
+				// Generate local salt
+				$localSalt = md5(StringTools::GenerateGUID());
+				
+				$hashedPassword = crypt($password, "\$6\$".$globalSalt);
+				$hashedPassword = crypt($hashedPassword, "\$6\$".$localSalt);
+				$hashedPassword = md5($hashedPassword);
+				
+				$newUser->Loginname = "guest-".strtolower(StringTools::GenerateGUID());
+				$newUser->Password = $hashedPassword;
+				$newUser->PasswordSalt = $localSalt;
+				$newUser->EmailAddress = $newUser->Loginname."@guest.com";
+				$newUser->UserGroup = UserGroup::GetGuestUserGroup();
+				
+				$newUser->Create();
+				
+				// Create Cookies
+				#$newUser->ID;
+				#$password;
 			}
 			
 			var_dump($identifier);

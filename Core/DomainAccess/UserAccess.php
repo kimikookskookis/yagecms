@@ -1,12 +1,12 @@
 <?php
 	namespace YageCMS\Core\DomainAccess;
 	
-	use YageCMS\Core\Domain\User;
-	use YageCMS\Core\Domain\DomainObject;
-	use YageCMS\Core\DatabaseInterface\Access;
-	use YageCMS\Core\DatabaseInterface\Record;
-	use YageCMS\Core\Exception\UserNotFoundException;
-	use YageCMS\Core\Tools\LogManager;
+	use \YageCMS\Core\Domain\User;
+	use \YageCMS\Core\Domain\DomainObject;
+	use \YageCMS\Core\DatabaseInterface\Access;
+	use \YageCMS\Core\DatabaseInterface\Record;
+	use \YageCMS\Core\Exception\UserNotFoundException;
+	use \YageCMS\Core\Tools\LogManager;
 	
 	class UserAccess
 	{
@@ -52,11 +52,15 @@
 			$password = $record->password->String;
 			$passwordsalt = $record->passwordsalt->String;
 			$emailaddress = $record->emailaddress->String;
+			$usergroup = $record->usergroup->String;
+			
+			$usergroup = UserGroupAccess::Instance()->GetByID($usergroup);
 			
 			$object->Loginname = $loginname;
 			$object->Password = $password;
 			$object->PasswordSalt = $passwordsalt;
 			$object->EmailAddress = $emailaddress;
+			$object->UserGroup = $usergroup;
 			
 			WebsiteDomainObjectAccess::Instance()->ConvertRecordToObject($record, $object);
 			

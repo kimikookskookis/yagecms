@@ -21,6 +21,9 @@
 	</DataSource>
 	
 	<CookiePrefix>website_</CookiePrefix>
+	
+	<GuestUserGroup>60141BF8-48DD-4834-8E86-B234E4D2199A</GuestUserGroup>
+	
 	<Log>
 		<default><AutoWrite>NO</AutoWrite></default>
 	</Log>

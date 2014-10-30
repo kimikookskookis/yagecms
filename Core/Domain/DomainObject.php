@@ -4,6 +4,7 @@
 	use YageCMS\Core\Tools\LogManager;
 	use YageCMS\Core\Exception\SetterNotDeclaredException;
 	use YageCMS\Core\Exception\GetterNotDeclaredException;
+	use YageCMS\Core\DatabaseInterface\ConnectionManager;
 	
 	abstract class DomainObject
 	{
@@ -40,8 +41,9 @@
 			$this->created = time();
 			$this->modified = time();
 			
-			$connection = DatabaseConnection::GetConnection("default");
-			return DatabaseAccess::Create($this);
+			$connection = ConnectionManager::Instance()->GetConnection("default");
+			var_dump($connection);
+			//return DatabaseAccess::Create($this);
 		}
 		
 		public function Modify()

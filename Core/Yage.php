@@ -37,7 +37,9 @@
 			 */
 			EventManager::Instance()->TriggerEvent("YageCMS.PostRendering");
 			
-			var_dump(Website::GetCurrentWebsite());
+			#var_dump(Website::GetCurrentWebsite());
+			
+			echo "<h1>".DomainAccess\DomainObjectAccess::Instance()->GenerateGUID()."</h1>";
 		}
 	}
 ?>
