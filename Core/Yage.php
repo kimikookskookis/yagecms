@@ -4,6 +4,7 @@
 	use \YageCMS\Core\Tools\EventManager;
 	use \YageCMS\Core\DomainAccess\WebsiteAccess;
 	use \YageCMS\Core\Domain\Website;
+	use \YageCMS\Core\Domain\User;
 	
 	class Yage
 	{
@@ -17,6 +18,8 @@
 			{
 				Website::SetCurrentWebsite($website);
 			}
+			
+			$user = User::SignIn();
 			
 			/*
 			 * Use this event to call functions before anything else has been executed

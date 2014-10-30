@@ -58,7 +58,7 @@
 			$object->PasswordSalt = $passwordsalt;
 			$object->EmailAddress = $emailaddress;
 			
-			DomainObjectAccess::Instance()->ConvertRecordToObject($record, $object);
+			WebsiteDomainObjectAccess::Instance()->ConvertRecordToObject($record, $object);
 			
 			return $object;
 		}

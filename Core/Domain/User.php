@@ -1,6 +1,9 @@
 <?php
 	namespace YageCMS\Core\Domain;
 	
+	use \YageCMS\Core\Tools\ConfigurationManager;
+	use \YageCMS\Core\Tools\RequestHeader;
+	
 	class User extends WebsiteDomainObject
 	{
 		  //
@@ -62,6 +65,32 @@
 		private function SetEmailAddress($value)
 		{
 			$this->emailaddress = $value;
+		}
+		
+		  //
+		 // FUNCTIONS
+		//
+		
+		public static function SignIn()
+		{
+			$cookiePrefix = ConfigurationManager::Instance()->GetParameter("CookiePrefix","local");
+			
+			$idCookie = $cookiePrefix."id";
+			$cookies = RequestHeader::Instance()->Cookies;
+			
+			$identifier = null;
+			
+			if(array_key_exists($idCookie, $cookies))
+			{
+				$identifier = $cookies->$idCookie;
+			}
+			else
+			{
+				$newUser = new User;
+				
+			}
+			
+			var_dump($identifier);
 		}
 	}
 ?>

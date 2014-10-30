@@ -20,6 +20,7 @@
 		<UseConnection>default</UseConnection>
 	</DataSource>
 	
+	<CookiePrefix>website_</CookiePrefix>
 	<Log>
 		<default><AutoWrite>NO</AutoWrite></default>
 	</Log>

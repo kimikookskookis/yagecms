@@ -28,7 +28,7 @@
 		 // VARIABLES
 		//
 		
-		private static /*(DomainObjectAccess)*/ $instance;
+		private static /*(WebsiteDomainObjectAccess)*/ $instance;
 		
 		  //
 		 // FUNCTIONS
@@ -38,7 +38,7 @@
 		{
 			if(is_null(self::$instance))
 			{
-				self::$instance = new DomainObjectAccess;
+				self::$instance = new WebsiteDomainObjectAccess;
 			}
 			
 			return self::$instance;
