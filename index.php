@@ -19,12 +19,23 @@
 	} catch(\Exception $e) {
 		
 		$code = $e->getMessage();
-		$code = explode(":",$code);
-		$log = $code[0];
-		$code = $code[1];
+		
+		#if(strlen($code) == 6)
+		{
+			$code = explode(":",$code);
+			$log = $code[0];
+			$code = $code[1];
+				
+			$log = YageCMS\Core\Tools\LogManager::Instance()->GetLog($log);
 			
-		$log = YageCMS\Core\Tools\LogManager::Instance()->GetLog($log);
-		$item = $log->GetLogItemByCode($code);
+			if($log)
+			{
+				$item = $log->GetLogItemByCode($code);
+			}else
+			{
+				$item = new YageCMS\Core\Tools\LogItem(1, $e->getMessage());
+			}
+		}
 		
 		echo "<h1>Uncaught Exception!</h1>	<p><strong>Type:</strong> ".get_class($e)."<br/><strong>Message:</strong> ".$item->Message."<br/><strong>Code:</strong> ".$item->Code."</p>";
 		echo "<p>Line ".$e->getLine()." in ".$e->getFile()."</p>";

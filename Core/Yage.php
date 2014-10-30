@@ -21,6 +21,11 @@
 			
 			$user = User::SignIn();
 			
+			/* This should be in an XML File */
+			\YageCMS\Core\Tools\EventManager::Instance()->RegisterEventHandler("YageCMS.Rendering",new \YageCMS\Core\Tools\EventHandler("YageCMS.Core.Tools.URIHandlerManager->ParseURI"));
+			/* End XML */
+			
+			
 			/*
 			 * Use this event to call functions before anything else has been executed
 			 */
