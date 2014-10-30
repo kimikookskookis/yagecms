@@ -49,7 +49,7 @@
 		public function GetByIdentifier($value)
 		{
 			$sqlQuery = "SELECT * FROM cookie WHERE identifier = :value AND deleted IS NULL";
-			$result = Access::Instance()->Read($sqlQuery, array("value" => $value);
+			$result = Access::Instance()->Read($sqlQuery, array("value" => $value));
 			
 			if(!$result || !$result->HasRecords)
 			{
@@ -90,6 +90,34 @@
 			
 			$object = new Cookie;
 			DomainObjectAccess::Instance()->AddToCache("ByID", $value, $object);
+			
+			$this->ConvertRecordToObject($result, $object);
+			
+			return $object;
+		}
+
+		public function GetByIdentifierAndName($identifier, $name)
+		{
+			$value = $identifier.":".$name;
+			
+			$fromCache = DomainObjectAccess::Instance()->GetFromCache("YageCMS\\Core\\Domain\\Cookie.ByIdentifierAndName",$value);
+			
+			if(!is_null($fromCache))
+			{
+				return $fromCache;
+			}
+			
+			$sqlQuery = "SELECT * FROM cookie WHERE identifier = :identifier AND name = :name";
+			$result = Access::Instance()->ReadSingle($sqlQuery, array("identifier" => $identifier, "name" => $name));
+			
+			if(!$result)
+			{
+				$logcode = LogManager::_("Cookie with Name '".$identifier.":".$name."' not found");
+				throw new CookieNotFoundException($logcode);
+			}
+			
+			$object = new Cookie;
+			DomainObjectAccess::Instance()->AddToCache("ByIdentifierAndName", $value, $object);
 			
 			$this->ConvertRecordToObject($result, $object);
 			

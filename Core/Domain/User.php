@@ -6,6 +6,10 @@
 	use \YageCMS\Core\Domain\UserGroup;
 	use \YageCMS\Core\Tools\StringTools;
 	use \YageCMS\Core\Tools\SaltManager;
+	use \YageCMS\Core\Domain\Website;
+	use \YageCMS\Core\Domain\Cookie;
+	use \YageCMS\Core\DomainAccess\CookieAccess;
+	use \YageCMS\Core\DomainAccess\UserAccess;
 	
 	class User extends WebsiteDomainObject
 	{
@@ -16,8 +20,27 @@
 		private /*(string)*/ $loginname;
 		private /*(string)*/ $password;
 		private /*(string)*/ $passwordsalt;
+		private /*(int)*/ $lastpasswordchange;
 		private /*(string)*/ $emailaddress;
 		private /*(UserGroup)*/ $usergroup;
+		
+		  //
+		 // METHODS
+		//
+		
+		/*private function ValidatePassword($password)
+		{
+			
+			// Hash with global salt
+				$globalSalt = SaltManager::Instance()->GetSalt(time());
+				// Generate local salt
+				$localSalt = md5(StringTools::GenerateGUID());
+				
+				$hashedPassword = crypt($password, "\$6\$".$globalSalt);
+				$hashedPassword = crypt($hashedPassword, "\$6\$".$localSalt);
+				$hashedPassword = md5($hashedPassword);
+				
+		}*/
 		
 		  //
 		 // GETTERS/SETTERS
@@ -59,6 +82,21 @@
 			$this->passwordsalt = $value;
 		}
 		
+		# LastPasswordChange
+		
+		private function GetLastPasswordChange()
+		{
+			return date("Y-m-d H:i:s",$this->lastpasswordchange);
+		}
+		
+		private function SetLastPasswordChange($value)
+		{
+			if(!is_int($value))
+				$value = strtotime($value);
+			
+			$this->lastpasswordchange = $value;
+		}
+		
 		# EmailAddress
 		
 		private function GetEmailAddress()
@@ -84,8 +122,24 @@
 		}
 		
 		  //
+		 // VARIABLES
+		//
+		
+		private static /*(User)*/ $current;
+		
+		  //
 		 // FUNCTIONS
 		//
+		
+		public static function GetCurrentUser()
+		{
+			return self::$current;
+		}
+		
+		public static function SetCurrentUser(User $value)
+		{
+			self::$current = $value;
+		}
 		
 		public static function SignIn()
 		{
@@ -94,11 +148,25 @@
 			$idCookie = $cookiePrefix."id";
 			$cookies = RequestHeader::Instance()->Cookies;
 			
-			$identifier = null;
+			$cookieIdentifier = null;
 			
 			if(array_key_exists($idCookie, $cookies))
 			{
-				$identifier = $cookies->$idCookie;
+				$cookieIdentifier = $cookies[$idCookie];
+				
+				// Get Cookies with the User ID and the Password
+				$cookieUserID = CookieAccess::Instance()->GetByIdentifierAndName($cookieIdentifier, "userid");
+				$cookieUserPassword = CookieAccess::Instance()->GetByIdentifierAndName($cookieIdentifier, "userpassword");
+				
+				$userid = $cookieUserID->Value;
+				$password = $cookieUserPassword->Value;
+				
+				$user = UserAccess::Instance()->GetByID($userid);
+				
+				if($user->Password == $password)
+				{
+					self::SetCurrentUser($user);	
+				}
 			}
 			else
 			{
@@ -115,6 +183,7 @@
 				$hashedPassword = crypt($hashedPassword, "\$6\$".$localSalt);
 				$hashedPassword = md5($hashedPassword);
 				
+				//$newUser->Website = Website::GetCurrentWebsite();
 				$newUser->Loginname = "guest-".strtolower(StringTools::GenerateGUID());
 				$newUser->Password = $hashedPassword;
 				$newUser->PasswordSalt = $localSalt;
@@ -124,11 +193,28 @@
 				$newUser->Create();
 				
 				// Create Cookies
-				#$newUser->ID;
-				#$password;
+				$userID = $newUser->ID;
+				$userPassword = $newUser->Password;
+				
+				$cookieIdentifier = StringTools::GenerateGUID();
+				
+				$cookieUserID = new Cookie();
+				$cookieUserID->Identifier = $cookieIdentifier;
+				$cookieUserID->Name = "userid";
+				$cookieUserID->Value = $userID;
+				$cookieUserID->Create();
+				
+				$cookieUserPassword = new Cookie();
+				$cookieUserPassword->Identifier = $cookieIdentifier;
+				$cookieUserPassword->Name = "userpassword";
+				$cookieUserPassword->Value = $userPassword;
+				$cookieUserPassword->Create();
+				
+				setcookie($idCookie, $cookieIdentifier, time()+time());
+				
+				self::SetCurrentUser($newUser);
 			}
 			
-			var_dump($identifier);
 		}
 	}
 ?>

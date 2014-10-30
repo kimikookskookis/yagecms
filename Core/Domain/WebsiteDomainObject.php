@@ -15,6 +15,16 @@
 		private /*(Website)*/ $website;
 		
 		  //
+		 // METHODS
+		//
+		
+		public function Create()
+		{
+			$this->Website = Website::GetCurrentWebsite();
+			parent::Create();
+		}
+		
+		  //
 		 // GETTERS/SETTERS
 		//
 		

@@ -1,6 +1,8 @@
 <?php
 	namespace YageCMS\Core\DatabaseInterface;
 	
+	use \YageCMS\Core\Domain\DomainObject;
+	
 	class Access
 	{
 		  //
@@ -71,12 +73,7 @@
 					if($value instanceof DomainObject)
 					{
 						$value = $value->ID;
-						$datatype = \PDO::PARAM_INT;
-					}
-					else if($value instanceof Unit)
-					{
-						$value = $value->Value;
-						$datatype = \PDO::PARAM_INT;
+						$datatype = \PDO::PARAM_STR;
 					}
 					else
 					{

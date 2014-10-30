@@ -1,10 +1,12 @@
 <?php
 	namespace YageCMS\Core\Domain;
 	
-	use YageCMS\Core\Tools\LogManager;
-	use YageCMS\Core\Exception\SetterNotDeclaredException;
-	use YageCMS\Core\Exception\GetterNotDeclaredException;
-	use YageCMS\Core\DatabaseInterface\ConnectionManager;
+	use \YageCMS\Core\Tools\LogManager;
+	use \YageCMS\Core\Exception\SetterNotDeclaredException;
+	use \YageCMS\Core\Exception\GetterNotDeclaredException;
+	use \YageCMS\Core\DatabaseInterface\ConnectionManager;
+	use \YageCMS\Core\Tools\StringTools;
+	use \YageCMS\Core\DomainAccess\DomainObjectAccess;
 	
 	abstract class DomainObject
 	{
@@ -38,12 +40,16 @@
 		
 		public function Create()
 		{
-			$this->created = time();
-			$this->modified = time();
+			$this->ID = StringTools::GenerateGUID();
+			$this->Created = time();
+			$this->CreatedBy = User::GetCurrentUser();
+			$this->Modified = time();
+			$this->ModifiedBy = User::GetCurrentUser();
 			
-			$connection = ConnectionManager::Instance()->GetConnection("default");
-			var_dump($connection);
-			//return DatabaseAccess::Create($this);
+			$type = strtolower($this->GetType());
+			$values = $this->GetChangedValues();
+			
+			return DomainObjectAccess::Create($type, $values);
 		}
 		
 		public function Modify()
@@ -60,6 +66,30 @@
 			
 			$connection = DatabaseConnection::GetConnection("default");
 			return DatabaseAccess::Delete($this);
+		}
+		
+		private function GetType()
+		{
+			$type = get_called_class();
+			$type = explode("\\",$type);
+			$type = $type[(count($type)-1)];
+			
+			return $type;
+		}
+		
+		private function GetChangedValues()
+		{
+			$values = array();
+			
+			foreach($this->changedfields as $field)
+			{
+				$value = $this->$field;
+				$field = strtolower($field);
+				
+				$values[$field] = $value;
+			}
+			
+			return $values;
 		}
 		
 		  //
@@ -82,11 +112,14 @@
 		
 		private function GetCreated()
 		{
-			return $this->created;
+			return date("Y-m-d H:i:s",$this->created);
 		}
 		
 		private function SetCreated($value)
 		{
+			if(!is_int($value))
+				$value = strtotime($value);
+			
 			$this->created = $value;
 		}
 		
@@ -106,11 +139,14 @@
 		
 		private function GetModified()
 		{
-			return $this->modified;
+			return date("Y-m-d H:i:s",$this->modified);
 		}
 		
 		private function SetModified($value)
 		{
+			if(!is_int($value))
+				$value = strtotime($value);
+			
 			$this->modified = $value;
 		}
 		
@@ -130,11 +166,14 @@
 		
 		private function GetDeleted()
 		{
-			return $this->deleted;
+			return (!is_null($this->deleted) ? date("Y-m-d H:i:s",$this->deleted) : null);
 		}
 		
 		private function SetDeleted($value)
 		{
+			if(!is_int($value) && !is_null($value))
+				$value = strtotime($value);
+			
 			$this->deleted = $value;
 		}
 		
@@ -203,6 +242,13 @@
 		{
 			switch($field)
 			{
+				case "IsPersistent":
+					
+					$this->stored = true;
+					$this->changedfields = array();
+					
+					break;
+					
 				default:
 					$method = "Set".$field;
 					$class = get_called_class();
@@ -214,6 +260,7 @@
 					if($currentValue <> $value)
 					{
 						$this->changedfields[] = $field;
+						$this->stored = false;
 					}
 					
 					if(!method_exists($this, $method))

@@ -28,6 +28,15 @@
 		 // METHODS
 		//
 		
+		public function Create($type, $values)
+		{
+			$sqlQuery = "INSERT INTO ".$type." (".implode(", ",array_keys($values)).") VALUES (:".implode(", :",array_keys($values)).")";
+			
+			$result = Access::Instance()->Execute($sqlQuery, $values);
+			
+			return $result;
+		}
+		
 		public function AddToCache($cache, $key, DomainObject $object)
 		{
 			if(!($object instanceof DomainObject))
@@ -107,6 +116,8 @@
 			$object->CreatedBy = $createdby;
 			$object->ModifiedBy = $modifiedby;
 			$object->DeletedBy = $deletedby;
+			
+			$object->IsPersistent = true;
 			
 			return $object;
 		}

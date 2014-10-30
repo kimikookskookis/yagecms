@@ -51,6 +51,7 @@
 			$loginname = $record->loginname->String;
 			$password = $record->password->String;
 			$passwordsalt = $record->passwordsalt->String;
+			$lastpasswordchange = $record->lastpasswordchange->Timestamp;
 			$emailaddress = $record->emailaddress->String;
 			$usergroup = $record->usergroup->String;
 			
@@ -59,6 +60,7 @@
 			$object->Loginname = $loginname;
 			$object->Password = $password;
 			$object->PasswordSalt = $passwordsalt;
+			$object->LastPasswordChange = $lastpasswordchange;
 			$object->EmailAddress = $emailaddress;
 			$object->UserGroup = $usergroup;
 			
