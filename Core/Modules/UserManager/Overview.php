@@ -1,10 +1,13 @@
 <?php
-	namespace YageCMS\Core\Modules\UserManager;
+	namespace YageCMS\Modules\UserManager;
 	
-	use \YageCMS\Core\Tools\Module;
+	use \YageCMS\Core\Tools\ModuleView;
 	
-	class Overview extends Module
+	class Overview extends ModuleView
 	{
-		
+		public function DoDefault()
+		{
+			echo "Hi";
+		}
 	}
 ?>

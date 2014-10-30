@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<CoreConfiguration>
+	<FileMapping>
+		<GlobalConfigurationDir>Configuration</GlobalConfigurationDir>
+		<LocalConfiguration>{$local:FileMapping.GlobalConfigurationDir}/GlobalConfiguration.xml</LocalConfiguration>
+		<LocaleDirectory>{$local:FileMapping.GlobalConfigurationDir}/Locales</LocaleDirectory>
+		<PasswordSalts>{$local:FileMapping.GlobalConfigurationDir}/Salts.xml</PasswordSalts>
+		
+		<URIHandlers>
+			<GlobalHandlers>Core/Configuration/URIHandlers.xml</GlobalHandlers>
+		</URIHandlers>
+	</FileMapping>
+	
+	<DefaultLocale>en</DefaultLocale>
+</CoreConfiguration>

@@ -50,7 +50,7 @@
 			$item = new LogItem($type, $message);
 			$this->items[$item->Code] = $item;
 			
-			if(ConfigurationManager::Instance()->GetParameter("Log.".$this->name.".AutoWrite") == "YES")
+			if(ConfigurationManager::Instance()->GetParameter("Log.".$this->name.".AutoWrite","local") == "YES")
 			{
 				$path = "Configuration/Logs/".$this->name."-".date("Ymd-His").".txt";
 				

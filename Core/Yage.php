@@ -5,6 +5,7 @@
 	use \YageCMS\Core\DomainAccess\WebsiteAccess;
 	use \YageCMS\Core\Domain\Website;
 	use \YageCMS\Core\Domain\User;
+	use \YageCMS\Core\Tools\ConfigurationManager;
 	
 	class Yage
 	{
@@ -19,7 +20,13 @@
 				Website::SetCurrentWebsite($website);
 			}
 			
+			// Import Website specific parameters
+			ConfigurationManager::Instance()->LoadConfiguration();
+			
 			$user = User::SignIn();
+			
+			// Import User specific parameters
+			ConfigurationManager::Instance()->LoadConfiguration();
 			
 			/* This should be in an XML File */
 			\YageCMS\Core\Tools\EventManager::Instance()->RegisterEventHandler("YageCMS.Rendering",new \YageCMS\Core\Tools\EventHandler("YageCMS.Core.Tools.URIHandlerManager->ParseURI"));

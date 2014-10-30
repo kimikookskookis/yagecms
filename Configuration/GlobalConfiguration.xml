@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<LocalConfiguration>
+<GlobalConfiguration>
 	
 	<DataSource>
 		<!-- Contains a list of all available connections (at least one is required) -->
@@ -27,4 +27,5 @@
 	<Log>
 		<default><AutoWrite>NO</AutoWrite></default>
 	</Log>
-</LocalConfiguration>
+	
+</GlobalConfiguration>

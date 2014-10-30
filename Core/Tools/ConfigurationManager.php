@@ -1,6 +1,8 @@
 <?php
 	namespace YageCMS\Core\Tools;
 	
+	use \YageCMS\Core\Domain\Website;
+	
 	class ConfigurationManager
 	{
 		  //
@@ -8,6 +10,7 @@
 		//
 		
 		private /*(array<string, array<string, string>)*/ $parameters;
+		private /*(array<string>)*/ $imported;
 		
 		  //
 		 // CONSTRUCTOR
@@ -16,9 +19,11 @@
 		private function __construct()
 		{
 			$this->parameters = array();
+			$this->imported = array();
 			
-			$this->LoadGlobalConfiguration();
-			$this->LoadLocalConfiguration();
+			#$this->LoadCoreConfiguration();
+			#$this->LoadGlobalConfiguration();
+			##$this->LoadLocalConfiguration();
 		}
 		
 		  //
@@ -64,19 +69,58 @@
 			return $parameters;
 		}
 		
+		public function LoadConfiguration()
+		{
+			self::$instance->LoadCoreConfiguration();
+			self::$instance->LoadGlobalConfiguration();
+			self::$instance->LoadLocalConfiguration();
+		}
+		
+		private function LoadCoreConfiguration()
+		{
+			$path = getcwd()."/Core/Configuration/CoreConfiguration.xml";
+			
+			if(!in_array($path, $this->imported))
+			{
+				$this->parameters["local"] = array();
+				$this->ImportConfigurationFile($path, "local");
+				$this->imported[] = $path;
+			}
+			
+			#LogManager::_("Global Configuration imported");
+		}
+		
 		private function LoadGlobalConfiguration()
 		{
-			$this->parameters["local"] = array();
+			#$this->parameters["global"] = array();
 			
-			$this->ImportConfigurationFile(getcwd()."/Core/Configuration/GlobalConfiguration.xml", "local");
+			$path = getcwd()."/Configuration/GlobalConfiguration.xml";
+			
+			if(!in_array($path, $this->imported) && file_exists($path))
+			{
+				$this->ImportConfigurationFile($path, "local");
+				$this->imported[] = $path;
+			}
 			
 			#LogManager::_("Global Configuration imported");
 		}
 		
 		private function LoadLocalConfiguration()
 		{
-			$path = $this->GetParameter("FileMapping.LocalConfiguration");
-			$this->ImportConfigurationFile($path, "local");
+			#$this->parameters["local"] = array();
+			
+			$website = Website::GetCurrentWebsite();
+			
+			if(is_null($website))
+				return;
+			
+			$path = getcwd()."/Configuration/".$website->Hostname."/LocalConfiguration.xml";
+			
+			if(!in_array($path, $this->imported) && file_exists($path))
+			{
+				$this->ImportConfigurationFile($path, "local");
+				$this->imported[] = $path;
+			}
 			
 			#LogManager::_("Local Configuration imported");
 		}
@@ -167,6 +211,7 @@
 			if(is_null(self::$instance))
 			{
 				self::$instance = new ConfigurationManager;
+				self::$instance->LoadConfiguration();
 			}
 			
 			return self::$instance;

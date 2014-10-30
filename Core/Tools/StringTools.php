@@ -19,5 +19,31 @@
 			
 			return sprintf($pattern, $rand1, $rand2, $rand3, $rand4, $rand5, $rand6, $rand7, $rand8);
 		}
+		
+		public static function CamelCase($string)
+		{
+			$camelcase = strtoupper(substr($string,0,1));
+			
+			$nextCap = false;
+			
+			for($pos=1;$pos<strlen($string); $pos++)
+			{
+				$char = substr($string,$pos,1);
+				
+				if($char == "_" || $char == " " || $char == "-")
+				{
+					$nextCap = true;
+				}
+				else {
+					$char = ($nextCap ? strtoupper($char) : $char);
+					
+					$camelcase .= $char;
+					
+					$nextCap = false;
+				}
+			}
+			
+			return $camelcase;
+		}
 	}
 ?>

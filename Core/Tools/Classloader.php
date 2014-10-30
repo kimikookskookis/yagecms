@@ -3,6 +3,7 @@
 	
 	use \YageCMS\Core\Exception\ClassNotFoundException;
 	use \YageCMS\Core\Exception\ClassFileNotFoundException;
+	use \YageCMS\Core\Domain\Website;
 	
 	class Classloader
 	{
@@ -47,31 +48,55 @@
 			
 			$isCore = false;
 			
-			if(substr($path,0,5) == "Core\\")
+			$paths = array();
+			
+			if(substr($path,0,8) <> "Modules\\")
 			{
 				$path = substr($path,5);
-				$isCore = true;
-			}
-			
-			$path = explode("\\",$path);
-			$path = implode("/",$path).".php";
-			
-			if($isCore)
-			{
 				$path = "Core/".$path;
+				
+				$path .= ".php";
+				
+				$paths[] = $path;
 			}
 			else
 			{
-				$path = "Configuration/Modules/".$path;
+				$path = substr($path,8);
+				
+				// Core Modules
+				$paths[] = "Core/Modules/".$path.".php";
+				// Global Modules
+				$paths[] = "Configuration/Modules/".$path.".php";
+				
+				// Local Modules
+				$website = Website::GetCurrentWebsite();
+			
+				if(!is_null($website))
+				{
+					$paths[] = "Configuration/".$website->Hostname."/Modules/".$path.".php";
+				}
 			}
 			
-			if(!file_exists($path))
+			$loaded = false;
+			
+			foreach($paths as $path)
 			{
-				$logcode = LogManager::Instance()->_("Class '".$class."' not found: File not found in its expected location (".$path.")", LogItem::TYPE_ERROR);
+				$path = explode("\\",$path);
+				$path = implode("/",$path);
+				
+				if(file_exists($path))
+				{
+					require_once $path;
+					$loaded = true;
+					break;
+				}
+			}
+			
+			if(!$loaded)
+			{
+				$logcode = LogManager::Instance()->_("Class '".$class."' not found: File not found in its expected location (".implode(", ",$paths).")", LogItem::TYPE_ERROR);
 				throw new ClassFileNotFoundException($logcode);
 			}
-			
-			require_once $path;
 			
 			$this->loaded[] = $class;
 			LogManager::Instance()->_("Class '".$class."' loaded", LogItem::TYPE_INFO);
