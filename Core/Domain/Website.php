@@ -1,6 +1,9 @@
 <?php
 	namespace YageCMS\Core\Domain;
 	
+	use \YageCMS\Core\DomainAccess\WebsiteAccess;
+	use \YageCMS\Core\Tools\ConfigurationManager;
+	
 	class Website extends DomainObject
 	{
 		  //
@@ -8,6 +11,26 @@
 		//
 		
 		private /*(string)*/ $hostname;
+		
+		  //
+		 // METHODS
+		//
+		
+		public function VarDump($html = true)
+		{
+			$dump = parent::VarDump($html);
+			
+			if($html)
+			{
+				$dump .= "<p><strong>Hostname:</strong> ".$this->Hostname."</p>";
+			}
+			else
+			{
+				
+			}
+			
+			return $dump;
+		}
 		
 		  //
 		 // GETTERS/SETTERS
@@ -43,6 +66,19 @@
 		public static function SetCurrentWebsite(Website $value)
 		{
 			self::$current = $value;
+		}
+		
+		public static function DetectHostname()
+		{
+			$website = WebsiteAccess::Instance()->GetByHostname($_SERVER["HTTP_HOST"]);
+			
+			if(!is_null($website))
+			{
+				Website::SetCurrentWebsite($website);
+			}
+			
+			// Import Website specific parameters
+			ConfigurationManager::Instance()->LoadConfiguration();
 		}
 	}
 ?>

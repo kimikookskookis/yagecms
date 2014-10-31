@@ -110,7 +110,7 @@
 			$handler = self::Instance()->MatchURI($currentURI, $currentMethod);
 			$result = $handler->CallHandler();
 			
-			return $result;
+			print $result;
 		}
 	}
 ?>

@@ -10,6 +10,7 @@
 		//
 		
 		private /*(array<string, array<int, EventHandler>>)*/ $events;
+		private /*(array<string>)*/ $imported;
 		
 		  //
 		 // CONSTRUCTOR
@@ -18,6 +19,7 @@
 		private function __construct()
 		{
 			$this->events = array();
+			$this->imported = array();
 		}
 		
 		  //
@@ -120,6 +122,37 @@
 			return true;
 		}
 		
+		private function ImportEventHandlers()
+		{
+			$this->ImportCoreEventHandlers();
+		}
+		
+		private function ImportCoreEventHandlers()
+		{
+			$path = getcwd()."/Core/Configuration/EventHandlers.xml";
+			
+			if(!in_array($path, $this->imported))
+			{
+				$this->ImportEventHandlerFile($path);
+				$this->imported[] = $path;
+			}
+		}
+		
+		private function ImportEventHandlerFile($path)
+		{
+			$xmlHandlers = simplexml_load_file($path);
+			
+			foreach($xmlHandlers->children() as $xmlHandler)
+			{
+				$name = (isset($xmlHandler["name"]) ? (string) $xmlHandler["name"] : null);
+				$event = (string) $xmlHandler["event"];
+				$handler = (string) $xmlHandler["handler"];
+				
+				$eventHandler = new EventHandler($handler, null, $name);
+				$this->RegisterEventHandler($event, $eventHandler);
+			}
+		}
+		
 		  //
 		 // VARIABLES
 		//
@@ -135,6 +168,7 @@
 			if(is_null(self::$instance))
 			{
 				self::$instance = new EventManager;
+				self::$instance->ImportEventHandlers();
 			}
 			
 			return self::$instance;

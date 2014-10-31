@@ -39,7 +39,7 @@
 			return $this->connections[$name];
 		}
 		
-		public function ImportConnectionsFromConfiguration()
+		private function ImportConnectionsFromConfiguration()
 		{
 			$connections = ConfigurationManager::Instance()->GetParameters("DataSource.Connections","local");
 			
@@ -69,6 +69,7 @@
 			if(is_null(self::$instance))
 			{
 				self::$instance = new ConnectionManager;
+				self::$instance->ImportConnectionsFromConfiguration();
 			}
 			
 			return self::$instance;

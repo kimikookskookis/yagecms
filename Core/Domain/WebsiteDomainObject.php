@@ -24,6 +24,22 @@
 			parent::Create();
 		}
 		
+		public function VarDump($html = true)
+		{
+			$dump = parent::VarDump($html);
+			
+			if($html)
+			{
+				$dump .= "<p><strong>Website:</strong> ".$this->Website->Hostname."</p>";
+			}
+			else
+			{
+				
+			}
+			
+			return $dump;
+		}
+		
 		  //
 		 // GETTERS/SETTERS
 		//

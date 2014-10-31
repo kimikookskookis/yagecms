@@ -10,8 +10,55 @@
 		 // ATTRIBUTES
 		//
 		
-		private /*(string)*/ $title;
 		private /*(string)*/ $output;
+		
+		  //
+		 // METHODS
+		//
+		
+		protected function AppendOutput($value)
+		{
+			$this->output .= $value;
+		}
+		
+		protected function PrependOutput($value)
+		{
+			$this->output = $value.$this->output;
+		}
+		
+		  //
+		 // PROPERTIES
+		//
+		
+		public function __get($field)
+		{
+			switch($field)
+			{
+				case "Output": return $this->GetOutput();
+			}
+		}
+		
+		public function __set($field, $value)
+		{
+			switch($field)
+			{
+				case "Output": $this->SetOutput($value); break;
+			}
+		}
+		
+		  //
+		 // GETTERS / SETTERS
+		//
+		
+		private function GetTitle()
+		{
+			return $this->title;
+		}
+		
+		private function SetTitle($value)
+		{
+			$this->title = $value;
+		}
 		
 		  //
 		 // FUNCTIONS
@@ -30,7 +77,14 @@
 			
 			$viewMethod = "Do".$action;
 			
-			return $moduleView->$viewMethod();
+			$result = $moduleView->$viewMethod();
+			
+			if(is_null($result))
+			{
+				$result = $moduleView->Output;
+			}
+			
+			return $result;
 		}
 	}
 ?>

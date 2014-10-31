@@ -28,6 +28,24 @@
 		 // METHODS
 		//
 		
+		public function VarDump($html = true)
+		{
+			$dump = parent::VarDump($html);
+			
+			if($html)
+			{
+				$dump .= "<p><strong>Loginname:</strong> ".$this->Loginname;
+				$dump .= "<br/><strong>Email-Address:</strong> ".$this->EmailAddress;
+				$dump .= "<br/><strong>Group:</strong> ".$this->UserGroup->Name."</p>";
+			}
+			else
+			{
+				
+			}
+			
+			return $dump;
+		}
+		
 		/*private function ValidatePassword($password)
 		{
 			
@@ -215,6 +233,8 @@
 				self::SetCurrentUser($newUser);
 			}
 			
+			// Import User specific parameters
+			ConfigurationManager::Instance()->LoadConfiguration();
 		}
 	}
 ?>

@@ -9,15 +9,26 @@
 		
 		private /*(string)*/ $handler;
 		private /*(array<object>)*/ $parameters;
+		private /*(string)*/ $name;
 		
 		  //
 		 // CONSTRUCTOR
 		//
 		
-		public function __construct($handler, $parameters = array())
+		public function __construct($handler, $parameters = array(), $name = null)
 		{
+			if(is_null($parameters))
+			{
+				$parameters = array();
+			}
+			else if(!is_array($parameters))
+			{
+				$parameters = array($parameters);
+			}
+			
 			$this->handler = $handler;
 			$this->parameters = $parameters;
+			$this->name = $name;
 		}
 		
 		  //

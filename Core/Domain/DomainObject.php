@@ -92,6 +92,49 @@
 			return $values;
 		}
 		
+		public function VarDump($html = true)
+		{
+			$dump = null;
+			
+			$id = (!is_null($this->ID) ? $this->ID : "New Object");
+			
+			if($html)
+			{
+				$dump .= "<h1>Dumb of Object &lt;".get_class($this)."#".$this->ID."&gt;</h1>";
+				
+				$dump .= "<p><strong>Created:</strong> ".$this->Created;
+				if(!is_null($this->CreatedBy)) $dump .= " <strong>by</strong> ".$this->CreatedBy->Loginname;
+				
+				$dump .= "<br/><strong>Last modified:</strong> ".$this->Modified;
+				if(!is_null($this->ModifiedBy)) $dump .= " <strong>by</strong> ".$this->ModifiedBy->Loginname;
+				
+				if($this->Deleted)
+				{
+					$dump .= "<br/><strong>Deleted:</strong> ".$this->Deleted;
+					if(!is_null($this->DeletedBy)) $dump .= " <strong>by</strong> ".$this->DeletedBy->Loginname;
+				}
+				
+				if(count($this->changedfields))
+				{
+					$dump .= "<br/><strong>Changed fields:</strong> ".implode(", ",$this->changedfields);
+				}
+				
+				$dump .= "<br/><strong>State:</strong> ";
+				
+				if($this->ID && $this->stored == true) $dump .= "Persistent";
+				else if($this->ID && !$this->stored) $dump .= "Modified";
+				else $dump .= "New";
+				
+				$dump .= "</p>";
+			}
+			else
+			{
+				
+			}
+			
+			return $dump;
+		}
+		
 		  //
 		 // GETTERS/SETTERS
 		//
@@ -244,8 +287,15 @@
 			{
 				case "IsPersistent":
 					
-					$this->stored = true;
-					$this->changedfields = array();
+					if($value == true)
+					{
+						$this->stored = true;
+						$this->changedfields = array();
+					}
+					else
+					{
+						$this->stored = false;
+					}
 					
 					break;
 					

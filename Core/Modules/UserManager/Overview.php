@@ -7,7 +7,7 @@
 	{
 		public function DoDefault()
 		{
-			echo "Hi";
+			return "Hi";
 		}
 	}
 ?>

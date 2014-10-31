@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<EventHandlers>
+	<EventHandler name="YageCMS.Core.DetectHostname" event="YageCMS.Core.PreRendering" handler="YageCMS.Core.Domain.Website->DetectHostname" />
+	<EventHandler name="YageCMS.Core.SignInUser" event="YageCMS.Core.PreRendering" handler="YageCMS.Core.Domain.User->SignIn" />
+	<EventHandler name="YageCMS.Core.ParseURI" event="YageCMS.Core.Rendering" handler="YageCMS.Core.Tools.URIHandlerManager->ParseURI" />
+</EventHandlers>
