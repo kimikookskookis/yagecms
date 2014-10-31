@@ -61,7 +61,7 @@
 				
 				foreach($this->events[$event] as $handlerposition => $reghandler)
 				{
-					if($reghandler->Handler == $searchhandler)
+					if($reghandler->Name == $searchhandler)
 					{
 						$position = $handlerposition;
 						
@@ -125,6 +125,8 @@
 		private function ImportEventHandlers()
 		{
 			$this->ImportCoreEventHandlers();
+			#$this->ImportGlobalEventHandlers();
+			#$this->ImportLocalEventHandlers();
 		}
 		
 		private function ImportCoreEventHandlers()
@@ -147,9 +149,13 @@
 				$name = (isset($xmlHandler["name"]) ? (string) $xmlHandler["name"] : null);
 				$event = (string) $xmlHandler["event"];
 				$handler = (string) $xmlHandler["handler"];
+				$position = (isset($xmlHandler["position"]) ? (string) $xmlHandler["position"] : "last");
+				
+				if($position == "first") $position = true;
+				else if($position == "last") $position = false;
 				
 				$eventHandler = new EventHandler($handler, null, $name);
-				$this->RegisterEventHandler($event, $eventHandler);
+				$this->RegisterEventHandler($event, $eventHandler, $position);
 			}
 		}
 		

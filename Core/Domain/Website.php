@@ -3,6 +3,7 @@
 	
 	use \YageCMS\Core\DomainAccess\WebsiteAccess;
 	use \YageCMS\Core\Tools\ConfigurationManager;
+	use \YageCMS\Core\Tools\EventManager;
 	
 	class Website extends DomainObject
 	{
@@ -66,6 +67,8 @@
 		public static function SetCurrentWebsite(Website $value)
 		{
 			self::$current = $value;
+			
+			EventManager::Instance()->TriggerEvent("YageCMS.Core.CurrentWebsiteSet");
 		}
 		
 		public static function DetectHostname()

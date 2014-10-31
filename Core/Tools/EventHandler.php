@@ -63,6 +63,7 @@
 		{
 			switch($field)
 			{
+				case "Name": return $this->GetName();
 				case "Handler": return $this->GetHandler();
 				default: throw new \InvalidArgumentException("Readable property '".$field."' not defined in ".get_called_class());
 			}
@@ -80,6 +81,11 @@
 		private function GetHandler()
 		{
 			return $this->handler;
+		}
+		
+		private function GetName()
+		{
+			return $this->name;
 		}
 	}
 ?>

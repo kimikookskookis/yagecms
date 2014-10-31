@@ -2,6 +2,8 @@
 	namespace YageCMS\Core\Tools;
 	
 	use \YageCMS\Core\Domain\Website;
+	use \YageCMS\Core\Domain\User;
+	use \YageCMS\Core\DomainAccess\ConfigurationParameterAccess;
 	
 	class ConfigurationManager
 	{
@@ -20,10 +22,6 @@
 		{
 			$this->parameters = array();
 			$this->imported = array();
-			
-			#$this->LoadCoreConfiguration();
-			#$this->LoadGlobalConfiguration();
-			##$this->LoadLocalConfiguration();
 		}
 		
 		  //
@@ -74,6 +72,7 @@
 			self::$instance->LoadCoreConfiguration();
 			self::$instance->LoadGlobalConfiguration();
 			self::$instance->LoadLocalConfiguration();
+			self::$instance->LoadUserConfiguration();
 		}
 		
 		private function LoadCoreConfiguration()
@@ -123,6 +122,17 @@
 			}
 			
 			#LogManager::_("Local Configuration imported");
+		}
+		
+		private function LoadUserConfiguration()
+		{
+			$path = "Database:User";
+			
+			if(!in_array($path, $this->imported) && !is_null(User::GetCurrentUser()))
+			{
+				$parameters = ConfigurationParameterAccess::Instance()->GetByScopeValue("USER", User::GetCurrentUser()->ID);
+				var_dump($parameters);
+			}
 		}
 		
 		private function LoadModuleConfiguration($module)

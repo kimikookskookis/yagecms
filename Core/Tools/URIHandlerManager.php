@@ -21,14 +21,87 @@
 		{
 			$this->handlers = array();
 			
-			$this->ImportURIHandlers();
+			$this->ImportCoreURIHandlers();
+			$this->ImportGlobalURIHandlers();
+			$this->ImportLocalURIHandlers();
 		}
 		
 		  //
 		 // METHOD
 		//
 		
-		private function ImportURIHandlers()
+		public function RegisterURIHandler(URIHandler $handler, $position = true)
+		{
+			if(is_bool($position))
+			{
+				if($position === true)
+				{
+					$this->handlers[] = $handler;
+				}
+				else
+				{
+					array_unshift($this->handlers, $handler);
+				}
+			}
+			else
+			{
+				$position = explode(":",$position);
+				
+				$mode = $position[0];
+				$searchhandler = $position[1];
+				
+				if($mode <> "before" && $mode <> "after")
+				{
+					$logcode = LogManager::_("URI Handler Position Mode '".$mode."' is not valid", LogItem::TYPE_ERROR);
+					throw new EventPositioningModeInvalidException($logcode);
+				}
+				
+				$position = -1;
+				
+				foreach($this->handlers as $handlerposition => $reghandler)
+				{
+					if($reghandler->Name == $searchhandler)
+					{
+						$position = $handlerposition;
+						
+						if($mode == "before")
+							$position--;
+						else
+							$position++;
+					}
+				}
+				
+				if($position > 0)
+				{
+					$this->handlers[$position] = $handler;
+				}
+				else
+				{
+					$this->handlers[] = $handler;
+				}
+			}
+			
+			/*
+			 * Now reorder the handlers within this event to add some spacing
+			 * between the positions
+			 */
+			
+			$position = 10;
+			
+			$reordered = array();
+			
+			foreach($this->handlers as $handler)
+			{
+				$reordered[$position] = $handler;
+				$position += 10;
+			}
+			
+			ksort($reordered);
+			
+			$this->handlers = $reordered;
+		}
+		
+		private function ImportCoreURIHandlers()
 		{
 			$paths = ConfigurationManager::Instance()->GetParameters("FileMapping.URIHandlers");
 			
@@ -42,6 +115,10 @@
 					
 					$name = (isset($xmlAttributes["name"]) ? (string) $xmlAttributes["name"] : null);
 					$method = (isset($xmlAttributes["method"]) ? (string) $xmlAttributes["method"] : "GET");
+					$position = (isset($xmlAttributes["position"]) ? (string) $xmlAttributes["position"] : "last");
+					
+					if($position == "first") $position = true;
+					else if($position == "last") $position = false;
 					
 					$pattern = (string) $xmlAttributes["pattern"];
 					$handler = (string) $xmlAttributes["handler"];
@@ -64,10 +141,12 @@
 						}
 					}
 					
-					$this->handlers[] = $handler;
+					$this->RegisterURIHandler($handler, $position);
 				}
 			}
 		}
+
+	
 
 		public function MatchURI($uri, $method = "GET")
 		{

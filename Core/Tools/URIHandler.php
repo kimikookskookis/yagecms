@@ -101,5 +101,26 @@
 			
 			return $result;
 		}
+		
+		  //
+		 // PROPERTIES
+		//
+		
+		public function __get($field)
+		{
+			switch($field)
+			{
+				case "Name": return $this->GetName();
+			}
+		}
+		
+		  //
+		 // GETTERS / SETTERS
+		//
+		
+		private function GetName()
+		{
+			return $this->name;
+		}
 	}
 ?>

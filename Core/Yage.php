@@ -2,7 +2,6 @@
 	namespace YageCMS\Core;
 	
 	use \YageCMS\Core\Tools\EventManager;
-	use \YageCMS\Core\Domain\User;
 	
 	class Yage
 	{

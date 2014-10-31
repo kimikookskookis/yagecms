@@ -1,12 +1,13 @@
 <?php
 	namespace YageCMS\Core\DomainAccess;
 	
-	use YageCMS\Core\Domain\Cookie;
-	use YageCMS\Core\Domain\DomainObject;
-	use YageCMS\Core\DatabaseInterface\Access;
-	use YageCMS\Core\DatabaseInterface\Record;
-	use YageCMS\Core\Exception\UserNotFoundException;
-	use YageCMS\Core\Tools\LogManager;
+	use \YageCMS\Core\Domain\Cookie;
+	use \YageCMS\Core\Domain\DomainObject;
+	use \YageCMS\Core\DatabaseInterface\Access;
+	use \YageCMS\Core\DatabaseInterface\Record;
+	use \YageCMS\Core\Exception\UserNotFoundException;
+	use \YageCMS\Core\Tools\LogManager;
+	use \YageCMS\Core\Domain\Website;
 	
 	class CookieAccess
 	{
@@ -48,8 +49,8 @@
 		
 		public function GetByIdentifier($value)
 		{
-			$sqlQuery = "SELECT * FROM cookie WHERE identifier = :value AND deleted IS NULL";
-			$result = Access::Instance()->Read($sqlQuery, array("value" => $value));
+			$sqlQuery = "SELECT * FROM cookie WHERE identifier = :value AND website = :website AND deleted IS NULL";
+			$result = Access::Instance()->Read($sqlQuery, array("value" => $value, "Website" => Website::GetCurrentWebsite()));
 			
 			if(!$result || !$result->HasRecords)
 			{
@@ -79,6 +80,8 @@
 				return $fromCache;
 			}
 			
+			### Shouldn't this iterate?
+			
 			$sqlQuery = "SELECT * FROM cookie WHERE id = :value";
 			$result = Access::Instance()->ReadSingle($sqlQuery, array("value" => $value));
 			
@@ -107,8 +110,8 @@
 				return $fromCache;
 			}
 			
-			$sqlQuery = "SELECT * FROM cookie WHERE identifier = :identifier AND name = :name";
-			$result = Access::Instance()->ReadSingle($sqlQuery, array("identifier" => $identifier, "name" => $name));
+			$sqlQuery = "SELECT * FROM cookie WHERE identifier = :identifier AND name = :name AND website = :website AND deleted IS NULL";
+			$result = Access::Instance()->ReadSingle($sqlQuery, array("identifier" => $identifier, "name" => $name, "Website" => Website::GetCurrentWebsite()));
 			
 			if(!$result)
 			{

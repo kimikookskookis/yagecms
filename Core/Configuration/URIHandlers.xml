@@ -1,13 +1,34 @@
 <?xml version="1.0" ?>
 <URIHandlers>
-	<URIHandler name="YageCMS.Core.DefaultModuleActionPath" pattern="/%module%/%view%.html" method="GET" handler="YageCMS.Core.Tools.ModuleView->CallModule">
+	
+	<URIHandler
+			name="YageCMS.Core.DefaultStandardModuleViewPath"
+			pattern="/%module%.html"
+			method="GET"
+			handler="YageCMS.Core.Tools.ModuleView->CallModule"
+			position="first">
+		<Parameter name="module" pattern="([a-zA-Z0-9_]+)" />
+	</URIHandler>
+	
+	<URIHandler
+			name="YageCMS.Core.DefaultModuleViewPath"
+			pattern="/%module%/%view%.html"
+			method="GET"
+			handler="YageCMS.Core.Tools.ModuleView->CallModule"
+			position="after:YageCMS.Core.DefaultStandardModuleViewPath">
 		<Parameter name="module" pattern="([a-zA-Z0-9_]+)" />
 		<Parameter name="view" pattern="([a-zA-Z0-9_]+)" />
 	</URIHandler>
 	
-	<URIHandler name="YageCMS.Core.DefaultModuleActionPathWithID" pattern="/%module%/%id%/%view%.html" method="GET" handler="YageCMS.Core.Tools.ModuleView->CallModule">
+	<URIHandler
+			name="YageCMS.Core.DefaultModuleViewPathWithID"
+			pattern="/%module%/%id%/%view%.html"
+			method="GET"
+			handler="YageCMS.Core.Tools.ModuleView->CallModule"
+			position="after:YageCMS.Core.DefaultModuleViewPath">
 		<Parameter name="module" pattern="([a-zA-Z0-9_]+)" />
 		<Parameter name="id" pattern="([A-F0-9\-]{36})" />
 		<Parameter name="view" pattern="([a-zA-Z0-9_]+)" />
 	</URIHandler>
+	
 </URIHandlers>

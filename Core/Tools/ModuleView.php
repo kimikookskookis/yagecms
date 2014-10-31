@@ -3,6 +3,8 @@
 	
 	use \YageCMS\Core\Tools\StringTools;
 	use \YageCMS\Core\DomainAccess\ModuleAccess;
+	use \YageCMS\Core\Tools\EventManager;
+	use \YageCMS\Core\Tools\RequestHeader;
 	
 	class ModuleView
 	{
@@ -61,21 +63,47 @@
 		}
 		
 		  //
+		 // VARIABLES
+		//
+		
+		private static /*(ModuleView)*/ $current;
+		
+		  //
 		 // FUNCTIONS
 		//
 		
-		public static function CallModule($module, $view = "default", $action = "default")
+		public static function GetCurrentModuleView()
+		{
+			return self::$current;
+		}
+		
+		public static function SetCurrentModuleView(ModuleView $value)
+		{
+			self::$current = $value;
+			
+			EventManager::Instance()->TriggerEvent("YageCMS.Core.ModuleViewSet");
+		}
+		
+		public static function CallModule($module, $view = "standard", $action = "default")
 		{
 			$module = StringTools::CamelCase($module);
 			$view = StringTools::CamelCase($view);
 			$action = StringTools::CamelCase($action);
+			$httpMethod = RequestHeader::Instance()->RequestMethod;
 			
 			$class = "\\YageCMS\\Modules\\".$module."\\".$view;
 			$class = new \ReflectionClass($class);
 			
 			$moduleView = $class->newInstance();
 			
-			$viewMethod = "Do".$action;
+			self::SetCurrentModuleView($moduleView);
+			
+			$viewMethod = $httpMethod."_Do".$action;
+			
+			if(!method_exists($moduleView, $viewMethod))
+			{
+				$viewMethod = "Do".$action;
+			}
 			
 			$result = $moduleView->$viewMethod();
 			

@@ -2,6 +2,7 @@
 	namespace YageCMS\Core\Domain;
 	
 	use \YageCMS\Core\Tools\ConfigurationManager;
+	use \YageCMS\Core\Tools\EventManager;
 	use \YageCMS\Core\Tools\RequestHeader;
 	use \YageCMS\Core\Domain\UserGroup;
 	use \YageCMS\Core\Tools\StringTools;
@@ -157,6 +158,8 @@
 		public static function SetCurrentUser(User $value)
 		{
 			self::$current = $value;
+			
+			EventManager::Instance()->TriggerEvent("YageCMS.Core.CurrentUserSet");
 		}
 		
 		public static function SignIn()

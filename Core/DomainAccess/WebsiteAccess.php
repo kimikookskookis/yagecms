@@ -54,7 +54,7 @@
 				return $fromCache;
 			}
 			
-			$sqlQuery = "SELECT * FROM website WHERE hostname = :value";
+			$sqlQuery = "SELECT * FROM website WHERE hostname = :value AND deleted IS NULL";
 			$result = Access::Instance()->ReadSingle($sqlQuery, array("value" => $value));
 			
 			if(!$result)
