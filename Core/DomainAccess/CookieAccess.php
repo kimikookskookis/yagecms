@@ -54,6 +54,7 @@
 			
 			if(!$result || !$result->HasRecords)
 			{
+				$logcode = LogManager::_("No Cookies with Identifier '".$value."' found");
 				throw new NoCookieFoundByIdentifierException($logcode);
 			}
 			
@@ -73,30 +74,7 @@
 				$objects[] = array();
 			}
 			
-			$fromCache = DomainObjectAccess::Instance()->GetFromCache("YageCMS\\Core\\Domain\\Cookie.ByID",$value);
-			
-			if(!is_null($fromCache))
-			{
-				return $fromCache;
-			}
-			
-			### Shouldn't this iterate?
-			
-			$sqlQuery = "SELECT * FROM cookie WHERE id = :value";
-			$result = Access::Instance()->ReadSingle($sqlQuery, array("value" => $value));
-			
-			if(!$result)
-			{
-				$logcode = LogManager::_("Cookie with ID '".$value."' not found");
-				throw new UserNotFoundException($logcode);
-			}
-			
-			$object = new Cookie;
-			DomainObjectAccess::Instance()->AddToCache("ByID", $value, $object);
-			
-			$this->ConvertRecordToObject($result, $object);
-			
-			return $object;
+			return $objects;
 		}
 
 		public function GetByIdentifierAndName($identifier, $name)
