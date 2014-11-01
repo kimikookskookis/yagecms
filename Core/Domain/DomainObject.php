@@ -263,6 +263,12 @@
 		{
 			switch($field)
 			{
+				case "IsPersistent":
+					
+					return $this->stored;
+					
+					break;
+					
 				#case "ID": return $this->GetID();
 				default:
 					$method = "Get".$field;

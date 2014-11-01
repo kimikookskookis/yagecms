@@ -3,7 +3,7 @@
 	
 	use \YageCMS\Core\Tools\ConfigurationManager;
 	
-	class URIHandler extends WebsiteDomainObject
+	class URIHandlerParameter extends WebsiteDomainObject
 	{
 		  //
 		 // ATTRIBUTES
@@ -12,6 +12,16 @@
 		private /*(URIHandler)*/ $urihandler;
 		private /*(string)*/ $name;
 		private /*(string)*/ $pattern;
+		
+		  //
+		 // CONSTRUCTOR
+		//
+		
+		public function __construct($name = null, $pattern = null)
+		{
+			$this->name = $name;
+			$this->pattern = $pattern;
+		}
 		
 		  //
 		 // GETTERS/SETTERS

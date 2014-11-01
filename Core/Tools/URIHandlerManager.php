@@ -2,8 +2,9 @@
 	namespace YageCMS\Core\Tools;
 	
 	use \YageCMS\Core\Tools\ConfigurationManager;
-	use \YageCMS\Core\Tools\URIParameter;
-	use \YageCMS\Core\Tools\URIHandler;
+	use \YageCMS\Core\Domain\URIHandlerParameter;
+	use \YageCMS\Core\Domain\URIHandler;
+	use \YageCMS\Core\DomainAccess\URIHandlerAccess;
 	
 	class URIHandlerManager
 	{
@@ -30,23 +31,26 @@
 		 // METHOD
 		//
 		
-		public function RegisterURIHandler(URIHandler $handler, $position = true)
+		public function RegisterURIHandler(URIHandler $handler)
 		{
-			if(is_bool($position))
+			$position = $handler->Position;
+			
+			if(empty($position))
 			{
-				if($position === true)
-				{
-					$this->handlers[] = $handler;
-				}
-				else
-				{
-					array_unshift($this->handlers, $handler);
-				}
+				$position = "last";
+			}
+			
+			if(strtolower($position) == "first")
+			{
+				array_unshift($this->handlers, $handler);
+			}
+			else if(strtolower($position) == "last")
+			{
+				$this->handlers[] = $handler;
 			}
 			else
 			{
 				$position = explode(":",$position);
-				
 				$mode = $position[0];
 				$searchhandler = $position[1];
 				
@@ -121,7 +125,7 @@
 				$pattern = (string) $xmlAttributes["pattern"];
 				$handler = (string) $xmlAttributes["handler"];
 				
-				$handler = new URIHandler($method, $pattern, $handler, $name);
+				$handler = new URIHandler($method, $pattern, $handler, $name, $position);
 				
 				$xmlParameters = $xmlHandler->children();
 				
@@ -134,12 +138,12 @@
 						$pname = (string) $xmlAttributes["name"];
 						$ppattern = (string) $xmlAttributes["pattern"];
 						
-						$parameter = new URIParameter($pname, $ppattern);
+						$parameter = new URIHandlerParameter($pname, $ppattern);
 						$handler->AddParameter($parameter);
 					}
 				}
 				
-				$this->RegisterURIHandler($handler, $position);
+				$this->RegisterURIHandler($handler);
 			}
 		}
 
@@ -163,7 +167,7 @@
 				$pattern = (string) $xmlAttributes["pattern"];
 				$handler = (string) $xmlAttributes["handler"];
 				
-				$handler = new URIHandler($method, $pattern, $handler, $name);
+				$handler = new URIHandler($method, $pattern, $handler, $name, $position);
 				
 				$xmlParameters = $xmlHandler->children();
 				
@@ -176,7 +180,7 @@
 						$pname = (string) $xmlAttributes["name"];
 						$ppattern = (string) $xmlAttributes["pattern"];
 						
-						$parameter = new URIParameter($pname, $ppattern);
+						$parameter = new URIHandlerParameter($pname, $ppattern);
 						$handler->AddParameter($parameter);
 					}
 				}
@@ -187,7 +191,24 @@
 
 		private function ImportLocalURIHandlers()
 		{
+			$urihandlers = array();
 			
+			try
+			{
+				$urihandlers = URIHandlerAccess::Instance()->GetAll();
+			}
+			catch(NoURIHandlersFoundException $e)
+			{
+				//ignore
+			}
+			
+			if(count($urihandlers))
+			{
+				foreach($urihandlers as $urihandler)
+				{
+					$this->RegisterURIHandler($urihandler);
+				}
+			}
 		}
 
 		public function MatchURI($uri, $method = "GET")
