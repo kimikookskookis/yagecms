@@ -49,6 +49,7 @@
 				$this->CreateRealPattern();
 			}
 			
+			echo "{^".$this->realpattern."$}i -> ".$uri."<br/>";
 			if(!preg_match("{^".$this->realpattern."$}i", $uri))
 			{
 				return false;
@@ -60,6 +61,8 @@
 		public function CreateRealPattern()
 		{
 			$realpattern = $this->pattern;
+			
+			$realpattern = str_replace(array("?","-"), array("\?","\-"), $realpattern);
 			
 			foreach($this->parameters as $parameter)
 			{

@@ -103,52 +103,86 @@
 		
 		private function ImportCoreURIHandlers()
 		{
-			$paths = ConfigurationManager::Instance()->GetParameters("FileMapping.URIHandlers");
+			$path = ConfigurationManager::Instance()->GetParameter("FileMapping.CoreURIHandlers");
 			
-			foreach($paths as $path)
-			{
-				$xmlHandlers = simplexml_load_file($path);
+			$xmlHandlers = simplexml_load_file($path);
 				
-				foreach($xmlHandlers->children() as $xmlHandler)
+			foreach($xmlHandlers->children() as $xmlHandler)
+			{
+				$xmlAttributes = $xmlHandler->attributes();
+				
+				$name = (isset($xmlAttributes["name"]) ? (string) $xmlAttributes["name"] : null);
+				$method = (isset($xmlAttributes["method"]) ? (string) $xmlAttributes["method"] : "GET");
+				$position = (isset($xmlAttributes["position"]) ? (string) $xmlAttributes["position"] : "last");
+				
+				if($position == "first") $position = true;
+				else if($position == "last") $position = false;
+				
+				$pattern = (string) $xmlAttributes["pattern"];
+				$handler = (string) $xmlAttributes["handler"];
+				
+				$handler = new URIHandler($method, $pattern, $handler, $name);
+				
+				$xmlParameters = $xmlHandler->children();
+				
+				if(count($xmlParameters))
 				{
-					$xmlAttributes = $xmlHandler->attributes();
-					
-					$name = (isset($xmlAttributes["name"]) ? (string) $xmlAttributes["name"] : null);
-					$method = (isset($xmlAttributes["method"]) ? (string) $xmlAttributes["method"] : "GET");
-					$position = (isset($xmlAttributes["position"]) ? (string) $xmlAttributes["position"] : "last");
-					
-					if($position == "first") $position = true;
-					else if($position == "last") $position = false;
-					
-					$pattern = (string) $xmlAttributes["pattern"];
-					$handler = (string) $xmlAttributes["handler"];
-					
-					$handler = new URIHandler($method, $pattern, $handler, $name);
-					
-					$xmlParameters = $xmlHandler->children();
-					
-					if(count($xmlParameters))
+					foreach($xmlParameters as $xmlParameter)
 					{
-						foreach($xmlParameters as $xmlParameter)
-						{
-							$xmlAttributes = $xmlParameter->attributes();
-							
-							$pname = (string) $xmlAttributes["name"];
-							$ppattern = (string) $xmlAttributes["pattern"];
-							
-							$parameter = new URIParameter($pname, $ppattern);
-							$handler->AddParameter($parameter);
-						}
+						$xmlAttributes = $xmlParameter->attributes();
+						
+						$pname = (string) $xmlAttributes["name"];
+						$ppattern = (string) $xmlAttributes["pattern"];
+						
+						$parameter = new URIParameter($pname, $ppattern);
+						$handler->AddParameter($parameter);
 					}
-					
-					$this->RegisterURIHandler($handler, $position);
 				}
+				
+				$this->RegisterURIHandler($handler, $position);
 			}
 		}
 
 		private function ImportGlobalURIHandlers()
 		{
+			$path = ConfigurationManager::Instance()->GetParameter("FileMapping.GlobalURIHandlers");
 			
+			$xmlHandlers = simplexml_load_file($path);
+				
+			foreach($xmlHandlers->children() as $xmlHandler)
+			{
+				$xmlAttributes = $xmlHandler->attributes();
+				
+				$name = (isset($xmlAttributes["name"]) ? (string) $xmlAttributes["name"] : null);
+				$method = (isset($xmlAttributes["method"]) ? (string) $xmlAttributes["method"] : "GET");
+				$position = (isset($xmlAttributes["position"]) ? (string) $xmlAttributes["position"] : "last");
+				
+				if($position == "first") $position = true;
+				else if($position == "last") $position = false;
+				
+				$pattern = (string) $xmlAttributes["pattern"];
+				$handler = (string) $xmlAttributes["handler"];
+				
+				$handler = new URIHandler($method, $pattern, $handler, $name);
+				
+				$xmlParameters = $xmlHandler->children();
+				
+				if(count($xmlParameters))
+				{
+					foreach($xmlParameters as $xmlParameter)
+					{
+						$xmlAttributes = $xmlParameter->attributes();
+						
+						$pname = (string) $xmlAttributes["name"];
+						$ppattern = (string) $xmlAttributes["pattern"];
+						
+						$parameter = new URIParameter($pname, $ppattern);
+						$handler->AddParameter($parameter);
+					}
+				}
+				
+				$this->RegisterURIHandler($handler, $position);
+			}
 		}
 
 		private function ImportLocalURIHandlers()

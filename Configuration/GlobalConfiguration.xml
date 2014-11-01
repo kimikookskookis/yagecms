@@ -1,6 +1,10 @@
 <?xml version="1.0" ?>
 <GlobalConfiguration>
 	
+	<FileMapping>
+		<GlobalURIHandlers>Configuration/URIHandlers.xml</GlobalURIHandlers>
+	</FileMapping>
+	
 	<DataSource>
 		<!-- Contains a list of all available connections (at least one is required) -->
 		<Connections>

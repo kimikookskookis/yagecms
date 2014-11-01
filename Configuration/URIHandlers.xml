@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<URIHandlers>
+	
+	<URIHandler
+			name="GlobalPath"
+			pattern="/global-%module%-%view%.html"
+			method="GET"
+			handler="YageCMS.Core.Tools.ModuleView->CallModule"
+			position="first">
+		<Parameter name="module" pattern="([a-zA-Z0-9_]+)" />
+		<Parameter name="view" pattern="([a-zA-Z0-9_]+)" />
+	</URIHandler>
+	
+</URIHandlers>

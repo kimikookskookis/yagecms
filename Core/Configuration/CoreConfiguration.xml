@@ -6,9 +6,7 @@
 		<LocaleDirectory>{$local:FileMapping.GlobalConfigurationDir}/Locales</LocaleDirectory>
 		<PasswordSalts>{$local:FileMapping.GlobalConfigurationDir}/Salts.xml</PasswordSalts>
 		
-		<URIHandlers>
-			<GlobalHandlers>Core/Configuration/URIHandlers.xml</GlobalHandlers>
-		</URIHandlers>
+		<CoreURIHandlers>Core/Configuration/URIHandlers.xml</CoreURIHandlers>
 	</FileMapping>
 	
 	<DefaultLocale>en</DefaultLocale>
