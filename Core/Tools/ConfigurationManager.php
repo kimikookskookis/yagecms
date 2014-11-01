@@ -4,6 +4,7 @@
 	use \YageCMS\Core\Domain\Website;
 	use \YageCMS\Core\Domain\User;
 	use \YageCMS\Core\DomainAccess\ConfigurationParameterAccess;
+	use \YageCMS\Core\Exception\NoConfigurationParametersFoundByScopevalueException;
 	
 	class ConfigurationManager
 	{
@@ -30,6 +31,9 @@
 		
 		public function GetParameter($name, $namespace = "local")
 		{
+			if(!array_key_exists($name, $this->parameters[$namespace]))
+				return null;
+			
 			return $this->parameters[$namespace][$name];
 		}
 		
@@ -72,6 +76,7 @@
 			self::$instance->LoadCoreConfiguration();
 			self::$instance->LoadGlobalConfiguration();
 			self::$instance->LoadLocalConfiguration();
+			self::$instance->LoadUserGroupConfiguration();
 			self::$instance->LoadUserConfiguration();
 		}
 		
@@ -91,8 +96,6 @@
 		
 		private function LoadGlobalConfiguration()
 		{
-			#$this->parameters["global"] = array();
-			
 			$path = getcwd()."/Configuration/GlobalConfiguration.xml";
 			
 			if(!in_array($path, $this->imported) && file_exists($path))
@@ -100,28 +103,74 @@
 				$this->ImportConfigurationFile($path, "local");
 				$this->imported[] = $path;
 			}
-			
-			#LogManager::_("Global Configuration imported");
 		}
 		
 		private function LoadLocalConfiguration()
 		{
-			#$this->parameters["local"] = array();
+			$path = "Database:Local";
 			
-			$website = Website::GetCurrentWebsite();
-			
-			if(is_null($website))
-				return;
-			
-			$path = getcwd()."/Configuration/".$website->Hostname."/LocalConfiguration.xml";
-			
-			if(!in_array($path, $this->imported) && file_exists($path))
+			if(!in_array($path, $this->imported) && !is_null(Website::GetCurrentWebsite()))
 			{
-				$this->ImportConfigurationFile($path, "local");
-				$this->imported[] = $path;
+				$parameters = null;
+				
+				try
+				{
+					$parameters = ConfigurationParameterAccess::Instance()->GetByScope("LOCAL");
+				}
+				catch(NoConfigurationParametersFoundByScopevalueException $e)
+				{
+					//ignore
+				}
+				
+				if(count($parameters))
+				{
+					$namespace = "local";
+					
+					foreach($parameters as $parameter)
+					{
+						$path = $parameter->name;
+						$value = $parameter->value;
+						
+						$value = preg_replace_callback("#\{\\$([a-zA-Z0-9_]+):([a-zA-Z0-9\._]+)\}#", array($this,"ReplaceParameterReferences"), $value);
+						
+						$this->parameters[$namespace][$path] = $value;
+					}
+				}
 			}
+		}
+		
+		private function LoadUserGroupConfiguration()
+		{
+			$path = "Database:UserGroup";
 			
-			#LogManager::_("Local Configuration imported");
+			if(!in_array($path, $this->imported) && !is_null(User::GetCurrentUser()))
+			{
+				$parameters = null;
+				
+				try
+				{
+					$parameters = ConfigurationParameterAccess::Instance()->GetByScopeValue("USERGROUP", User::GetCurrentUser()->UserGroup);
+				}
+				catch(NoConfigurationParametersFoundByScopevalueException $e)
+				{
+					//ignore
+				}
+				
+				if(count($parameters))
+				{
+					$namespace = "user";
+					
+					foreach($parameters as $parameter)
+					{
+						$path = $parameter->name;
+						$value = $parameter->value;
+						
+						$value = preg_replace_callback("#\{\\$([a-zA-Z0-9_]+):([a-zA-Z0-9\._]+)\}#", array($this,"ReplaceParameterReferences"), $value);
+						
+						$this->parameters[$namespace][$path] = $value;
+					}
+				}
+			}
 		}
 		
 		private function LoadUserConfiguration()
@@ -130,10 +179,64 @@
 			
 			if(!in_array($path, $this->imported) && !is_null(User::GetCurrentUser()))
 			{
-				$parameters = ConfigurationParameterAccess::Instance()->GetByScopeValue("USER", User::GetCurrentUser()->ID);
-				var_dump($parameters);
+				$parameters = null;
+				
+				try
+				{
+					$parameters = ConfigurationParameterAccess::Instance()->GetByScopeValue("USER", User::GetCurrentUser());
+				}
+				catch(NoConfigurationParametersFoundByScopevalueException $e)
+				{
+					//ignore
+				}
+				
+				if(count($parameters))
+				{
+					$namespace = "user";
+					
+					foreach($parameters as $parameter)
+					{
+						$path = $parameter->name;
+						$value = $parameter->value;
+						
+						$value = preg_replace_callback("#\{\\$([a-zA-Z0-9_]+):([a-zA-Z0-9\._]+)\}#", array($this,"ReplaceParameterReferences"), $value);
+						
+						$this->parameters[$namespace][$path] = $value;
+					}
+				}
 			}
 		}
+		
+		/*
+		 * if(count($parameters))
+				{
+					foreach($parameters as $parameter)
+					{
+						$namespace = strtolower($parameter->Scope);
+						
+						if(!is_null($parameter->ScopeValue))
+						{
+							switch($parameter->SCOPE)
+							{
+								// The following scopes require no identifier for their namespace
+								case "LOCAL":
+								case "USER":
+									break;
+									
+								default:
+									$namespace .= ":".$parameter->ScopeValue;
+									break;
+							}
+						}
+						
+						$path = $parameter->name;
+						$value = $parameter->value;
+						
+						$value = preg_replace_callback("#\{\\$([a-zA-Z0-9_]+):([a-zA-Z0-9\._]+)\}#", array($this,"ReplaceParameterReferences"), $value);
+						
+						$this->parameters[$namespace][$path] = $value;
+					}
+				}*/
 		
 		private function LoadModuleConfiguration($module)
 		{

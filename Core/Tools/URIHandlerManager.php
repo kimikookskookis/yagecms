@@ -146,7 +146,15 @@
 			}
 		}
 
-	
+		private function ImportGlobalURIHandlers()
+		{
+			
+		}
+
+		private function ImportLocalURIHandlers()
+		{
+			
+		}
 
 		public function MatchURI($uri, $method = "GET")
 		{

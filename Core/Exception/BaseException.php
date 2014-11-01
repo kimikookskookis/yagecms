@@ -29,4 +29,8 @@
 	class GetterNotDeclaredException extends BaseException {}
 	
 	class UserNotFoundException extends BaseException {}
+	
+	class CookieNotFoundException extends BaseException {}
+	
+	class NoConfigurationParametersFoundByScopevalueException extends BaseException {}
 ?>

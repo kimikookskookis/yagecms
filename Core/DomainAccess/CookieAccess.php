@@ -5,7 +5,7 @@
 	use \YageCMS\Core\Domain\DomainObject;
 	use \YageCMS\Core\DatabaseInterface\Access;
 	use \YageCMS\Core\DatabaseInterface\Record;
-	use \YageCMS\Core\Exception\UserNotFoundException;
+	use \YageCMS\Core\Exception\CookieNotFoundException;
 	use \YageCMS\Core\Tools\LogManager;
 	use \YageCMS\Core\Domain\Website;
 	
@@ -50,7 +50,7 @@
 		public function GetByIdentifier($value)
 		{
 			$sqlQuery = "SELECT * FROM cookie WHERE identifier = :value AND website = :website AND deleted IS NULL";
-			$result = Access::Instance()->Read($sqlQuery, array("value" => $value, "Website" => Website::GetCurrentWebsite()));
+			$result = Access::Instance()->Read($sqlQuery, array("value" => $value, "website" => Website::GetCurrentWebsite()));
 			
 			if(!$result || !$result->HasRecords)
 			{
@@ -71,7 +71,7 @@
 				
 				$this->ConvertRecordToObject($record, $object);
 				
-				$objects[] = array();
+				$objects[] = $object;
 			}
 			
 			return $objects;
@@ -89,7 +89,7 @@
 			}
 			
 			$sqlQuery = "SELECT * FROM cookie WHERE identifier = :identifier AND name = :name AND website = :website AND deleted IS NULL";
-			$result = Access::Instance()->ReadSingle($sqlQuery, array("identifier" => $identifier, "name" => $name, "Website" => Website::GetCurrentWebsite()));
+			$result = Access::Instance()->ReadSingle($sqlQuery, array("identifier" => $identifier, "name" => $name, "website" => Website::GetCurrentWebsite()));
 			
 			if(!$result)
 			{

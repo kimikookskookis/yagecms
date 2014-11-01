@@ -2,6 +2,8 @@
 	namespace YageCMS\Core\DatabaseInterface;
 	
 	use \YageCMS\Core\Domain\DomainObject;
+	use \YageCMS\Core\Tools\LogManager;
+	use \YageCMS\Core\Exception\BaseException;
 	
 	class Access
 	{
@@ -30,7 +32,8 @@
 			}
 			catch(\Exception $e)
 			{
-				throw $e;
+				$logcode = LogManager::_($e->getMessage());
+				throw new BaseException($logcode);
 			}
 			
 			try

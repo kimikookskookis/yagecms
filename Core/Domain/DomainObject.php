@@ -134,6 +134,11 @@
 			
 			return $dump;
 		}
+
+		public function __tostring()
+		{
+			return $this->ID;
+		}
 		
 		  //
 		 // GETTERS/SETTERS

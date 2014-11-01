@@ -5,7 +5,7 @@
 	use \YageCMS\Core\Domain\DomainObject;
 	use \YageCMS\Core\DatabaseInterface\Access;
 	use \YageCMS\Core\DatabaseInterface\Record;
-	use \YageCMS\Core\Exception\UserNotFoundException;
+	use \YageCMS\Core\Exception\NoConfigurationParametersFoundByScopevalueException;
 	use \YageCMS\Core\Tools\LogManager;
 	use \YageCMS\Core\Domain\Website;
 	
@@ -49,33 +49,38 @@
 		
 		public function GetByScope($value)
 		{
-			$fromCache = DomainObjectAccess::Instance()->GetFromCache("YageCMS\\Core\\Domain\\ConfigurationParameter.ByScope",$value);
-			
-			if(!is_null($fromCache))
-			{
-				return $fromCache;
-			}
-			
 			$sqlQuery = "SELECT * FROM configurationparameter WHERE scope = :value AND website = :website AND deleted IS NULL";
-			$result = Access::Instance()->ReadSingle($sqlQuery, array("value" => $value, "website" => Website::GetCurrentWebsite()));
+			$parameters = array("value" => $value, "website" => Website::GetCurrentWebsite());
 			
-			if(!$result)
+			$result = Access::Instance()->Read($sqlQuery, $parameters);
+			
+			if(!$result || !$result->HasRecords)
 			{
 				$logcode = LogManager::_("Configuration Parameter with Scope '".$value."' not found");
-				throw new UserNotFoundException($logcode);
+				throw new NoConfigurationParametersFoundByScopevalueException($logcode);
 			}
 			
-			$object = new ConfigurationParameter;
-			DomainObjectAccess::Instance()->AddToCache("ByScope", $value, $object);
+			$objects = array();
 			
-			$this->ConvertRecordToObject($result, $object);
+			while($result->MoveToNextRecord() == true)
+			{
+				$record = $result->CurrentRecord;
+				
+				$object = new ConfigurationParameter;
+				
+				$id = $record->id->String;
+				DomainObjectAccess::Instance()->AddToCache("ByID", $id, $object);
+				
+				$this->ConvertRecordToObject($record, $object);
+				$objects[] = $object;
+			}
 			
-			return $object;
+			return $objects;
 		}
 		
 		public function GetByScopeValue($scope, $scopevalue)
 		{
-			$sqlQuery = "SELECT * FROM configurationparameter WHERE scope = :scopevalue AND AND scopevalue = :scopevalue website = :website AND deleted IS NULL";
+			$sqlQuery = "SELECT * FROM configurationparameter WHERE scope = :scopevalue AND scopevalue = :scopevalue AND website = :website AND deleted IS NULL";
 			$result = Access::Instance()->Read($sqlQuery, array("scope" => $scope, "scopevalue" => $scopevalue, "website" => Website::GetCurrentWebsite()));
 			
 			if(!$result || !$result->HasRecords)
@@ -97,7 +102,7 @@
 				
 				$this->ConvertRecordToObject($record, $object);
 				
-				$objects[] = array();
+				$objects[] = $object;
 			}
 			
 			return $objects;

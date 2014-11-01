@@ -55,14 +55,14 @@
 		{
 			$position = 0;
 			
-			$this->MoveToPosition($position);
+			return $this->MoveToPosition($position);
 		}
 		
 		public function MoveToNextRecord()
 		{
 			$position = $this->currentposition + 1;
 			
-			$this->MoveToPosition($position);
+			return $this->MoveToPosition($position);
 		}
 		
 		  //
