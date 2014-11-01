@@ -64,7 +64,7 @@
 		{
 			$data = strtolower($this->GetString());
 			
-			if(in_array($data, array("false","0","n","no")))
+			if(in_array($data, array("false","0","n","no","denied")))
 			{
 				return false;
 			}

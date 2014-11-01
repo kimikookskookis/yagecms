@@ -29,6 +29,11 @@
 		 // METHODS
 		//
 		
+		public function HasPermission($permission)
+		{
+			return $this->usergroup->HasPermission($permission);
+		}
+		
 		public function VarDump($html = true)
 		{
 			$dump = parent::VarDump($html);

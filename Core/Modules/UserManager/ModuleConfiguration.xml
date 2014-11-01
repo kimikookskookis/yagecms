@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<ModuleConfiguration>
+	<Name>User Manager</Name>
+	<Description>This system module allows creating, editing and deleting users.</Description>
+	
+	<!--Views>
+		<Overview>
+			<RequiredPermissions>YageCMS.Core.Module.UserManager.AccessUserManager</RequiredPermissions>
+			<RequiredPermissions>YageCMS.Core.Module.UserManager.AccessOverview</RequiredPermissions>
+		</Overview>
+	</Views-->
+</ModuleConfiguration>
