@@ -96,7 +96,7 @@
 			$action = StringTools::CamelCase($action);
 			$httpMethod = RequestHeader::Instance()->RequestMethod;
 			
-			$class = "\\YageCMS\\Modules\\".$module."\\".$view;
+			$class = "\\YageCMS\\Modules\\".$module."\\Views\\".$view."\\View";
 			$class = new \ReflectionClass($class);
 			
 			$moduleView = $class->newInstance();

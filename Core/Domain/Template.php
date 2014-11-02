@@ -176,8 +176,8 @@
 			$path = null;
 			
 			// YageCMS.Core.Module.%Module%.%View%.%Name%
-			// -> Core/Modules/%Module%/Templates/%View%/[Subtemplates/]%Name%.html
-			// -> Configuration/%hostname%/Templates/Modules/%Module%/%View%/[Subtemplates/]%Name%.html
+			// -> Core/Modules/%Module%/Views/%View%/Templates/[Subtemplates/]%Name%.html
+			// -> Configuration/%hostname%/Modules/%Module%/Views/%View%/Templates/[Subtemplates/]%Name%.html
 			if($name[0] == "YageCMS" && $name[1] == "Core" && $name[2] == "Module")
 			{
 				if(!$template->IsPersistent)
@@ -188,16 +188,13 @@
 				{
 					$path .= "Configuration/".$hostname."/Templates/Modules/";
 				}
-					// Mod-Name
-				$path .= $name[3]."/";
+					// Mod-Name				// View-Name
+				$path .= $name[3]."/Views/".$name[4]."/";
 				
 				if(!$template->IsPersistent)
 				{
 					$path .= "Templates/";
 				}
-				
-					// View-Name
-				$path .= $name[4]."/";
 				
 				if($template->Type == "SUBTEMPLATE")
 				{
@@ -206,9 +203,10 @@
 				
 				$path .= $name[5].".html";
 			}
+			
 			// Module.%Module%.%View%.%Name%
-			// -> Configuration/Modules/%Module%/Templates/%View%/[Subtemplates/]%Name%.html
-			// -> Configuration/%hostname%/Templates/Modules/%Module%/%View%/[Subtemplates/]%Name%.html
+			// -> Configuration/Modules/%Module%/Views/%View%/Templates/[Subtemplates/]%Name%.html
+			// -> Configuration/%hostname%/Templates/Modules/%Module%/Views/%View%/[Subtemplates/]%Name%.html
 			else if($name[0] == "Module")
 			{
 				if(!$template->IsPersistent)
@@ -221,15 +219,12 @@
 				}
 				
 					// Mod-Name
-				$path .= $name[1]."/";
+				$path .= $name[1]."/Views/".$name[2]."/";
 				
 				if(!$template->IsPersistent)
 				{
 					$path .= "Templates/";
 				}
-				
-					// View-Name
-				$path .= $name[2]."/";
 				
 				if($template->Type == "SUBTEMPLATE")
 				{
