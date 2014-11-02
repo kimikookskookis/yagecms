@@ -1,7 +1,7 @@
 <?php
 	namespace YageCMS\Modules\UserManager;
 	
-	use \YageCMS\Core\Tools\ModuleView;
+	use \YageCMS\Core\Tools\Module\ModuleView;
 	
 	class Overview extends ModuleView
 	{

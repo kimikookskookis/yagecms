@@ -2,6 +2,11 @@
 <ModuleConfiguration>
 	<Name>User Manager</Name>
 	<Description>This system module allows creating, editing and deleting users.</Description>
+	<Version>0.1</Version>
+	
+	<Requirements>
+		<MediaManager>0.1</MediaManager>
+	</Requirements>
 	
 	<!--Views>
 		<Overview>

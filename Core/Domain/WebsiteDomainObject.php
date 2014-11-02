@@ -30,7 +30,9 @@
 			
 			if($html)
 			{
-				$dump .= "<p><strong>Website:</strong> ".$this->Website->Hostname."</p>";
+				$hostname = (!is_null($this->Website) ? $this->Website->Hostname : "Not assigned");
+				
+				$dump .= "<p><strong>Website:</strong> ".$hostname."</p>";
 			}
 			else
 			{

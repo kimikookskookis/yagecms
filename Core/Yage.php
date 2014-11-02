@@ -22,6 +22,8 @@
 			 * Use this event to call functions when everything else has been executed
 			 */
 			EventManager::Instance()->TriggerEvent("YageCMS.Core.PostRendering");
+			
+			print \YageCMS\Core\Domain\Template::LoadTemplate("Module.Gallery.ViewGallery.Default","VIEW")->VarDump(true);
 		}
 	}
 ?>

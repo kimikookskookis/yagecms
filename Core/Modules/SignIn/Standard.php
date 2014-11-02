@@ -1,7 +1,7 @@
 <?php
 	namespace YageCMS\Modules\SignIn;
 	
-	use \YageCMS\Core\Tools\ModuleView;
+	use \YageCMS\Core\Tools\Module\ModuleView;
 	
 	class Standard extends ModuleView
 	{

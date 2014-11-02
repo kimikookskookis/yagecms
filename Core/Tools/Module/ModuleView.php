@@ -1,5 +1,5 @@
 <?php
-	namespace YageCMS\Core\Tools;
+	namespace YageCMS\Core\Tools\Module;
 	
 	use \YageCMS\Core\Tools\StringTools;
 	use \YageCMS\Core\DomainAccess\ModuleAccess;
@@ -86,6 +86,11 @@
 		
 		public static function CallModule($module, $view = "standard", $action = "default")
 		{
+			if(!is_null(self::$current))
+			{
+				throw new CannotCallMultipleModuleViewsException();
+			}
+			
 			$module = StringTools::CamelCase($module);
 			$view = StringTools::CamelCase($view);
 			$action = StringTools::CamelCase($action);

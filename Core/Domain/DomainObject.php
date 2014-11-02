@@ -100,7 +100,7 @@
 			
 			if($html)
 			{
-				$dump .= "<h1>Dumb of Object &lt;".get_class($this)."#".$this->ID."&gt;</h1>";
+				$dump .= "<h1>Dumb of Object &lt;".get_class($this)."#".$id."&gt;</h1>";
 				
 				$dump .= "<p><strong>Created:</strong> ".$this->Created;
 				if(!is_null($this->CreatedBy)) $dump .= " <strong>by</strong> ".$this->CreatedBy->Loginname;

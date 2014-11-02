@@ -33,4 +33,6 @@
 	class CookieNotFoundException extends BaseException {}
 	
 	class NoConfigurationParametersFoundByScopevalueException extends BaseException {}
+	
+	class NoTemplateFoundInExpectedLocationException extends BaseException {}
 ?>
