@@ -28,7 +28,7 @@
 			$this->output = $value.$this->output;
 		}
 		
-		  //
+	  //
 		 // PROPERTIES
 		//
 		
@@ -52,72 +52,14 @@
 		 // GETTERS / SETTERS
 		//
 		
-		private function GetTitle()
+		private function GetOutput()
 		{
-			return $this->title;
+			return $this->output;
 		}
 		
-		private function SetTitle($value)
+		private function SetOutput($value)
 		{
-			$this->title = $value;
-		}
-		
-		  //
-		 // VARIABLES
-		//
-		
-		private static /*(ModuleView)*/ $current;
-		
-		  //
-		 // FUNCTIONS
-		//
-		
-		public static function GetCurrentModuleView()
-		{
-			return self::$current;
-		}
-		
-		public static function SetCurrentModuleView(ModuleView $value)
-		{
-			self::$current = $value;
-			
-			EventManager::Instance()->TriggerEvent("YageCMS.Core.ModuleViewSet");
-		}
-		
-		public static function CallModule($module, $view = "standard", $action = "default")
-		{
-			if(!is_null(self::$current))
-			{
-				throw new CannotCallMultipleModuleViewsException();
-			}
-			
-			$module = StringTools::CamelCase($module);
-			$view = StringTools::CamelCase($view);
-			$action = StringTools::CamelCase($action);
-			$httpMethod = RequestHeader::Instance()->RequestMethod;
-			
-			$class = "\\YageCMS\\Modules\\".$module."\\Views\\".$view."\\View";
-			$class = new \ReflectionClass($class);
-			
-			$moduleView = $class->newInstance();
-			
-			self::SetCurrentModuleView($moduleView);
-			
-			$viewMethod = $httpMethod."_Do".$action;
-			
-			if(!method_exists($moduleView, $viewMethod))
-			{
-				$viewMethod = "Do".$action;
-			}
-			
-			$result = $moduleView->$viewMethod();
-			
-			if(is_null($result))
-			{
-				$result = $moduleView->Output;
-			}
-			
-			return $result;
+			$this->output = $value;
 		}
 	}
 ?>

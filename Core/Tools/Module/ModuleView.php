@@ -8,59 +8,6 @@
 	
 	class ModuleView extends View
 	{
-		  //
-		 // ATTRIBUTES
-		//
-		
-		private /*(string)*/ $output;
-		
-		  //
-		 // METHODS
-		//
-		
-		protected function AppendOutput($value)
-		{
-			$this->output .= $value;
-		}
-		
-		protected function PrependOutput($value)
-		{
-			$this->output = $value.$this->output;
-		}
-		
-		  //
-		 // PROPERTIES
-		//
-		
-		public function __get($field)
-		{
-			switch($field)
-			{
-				case "Output": return $this->GetOutput();
-			}
-		}
-		
-		public function __set($field, $value)
-		{
-			switch($field)
-			{
-				case "Output": $this->SetOutput($value); break;
-			}
-		}
-		
-		  //
-		 // GETTERS / SETTERS
-		//
-		
-		private function GetTitle()
-		{
-			return $this->title;
-		}
-		
-		private function SetTitle($value)
-		{
-			$this->title = $value;
-		}
 		
 		  //
 		 // VARIABLES
@@ -84,7 +31,7 @@
 			EventManager::Instance()->TriggerEvent("YageCMS.Core.ModuleViewSet");
 		}
 		
-		public static function CallModule($module, $view = "standard", $action = "default")
+		public static function CallModuleView($module, $view = "standard", $action = "default")
 		{
 			if(!is_null(self::$current))
 			{
