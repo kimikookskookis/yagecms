@@ -22,7 +22,7 @@
 			
 			self::SetCurrentModuleView($moduleView);
 			
-			$method = "Do";
+			$method = "DoAction";
 			
 			$result = $plugin->$method();
 			

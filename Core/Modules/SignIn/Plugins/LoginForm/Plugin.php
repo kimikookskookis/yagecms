@@ -6,6 +6,9 @@
 	
 	class View extends PluginForm
 	{
-		
+		public function DoAction()
+		{
+			return "DoAction of LoginForm";
+		}
 	}
 ?>
