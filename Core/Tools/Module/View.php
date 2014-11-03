@@ -6,7 +6,7 @@
 	use \YageCMS\Core\Tools\EventManager;
 	use \YageCMS\Core\Tools\RequestHeader;
 	
-	class ModuleView extends View
+	class View
 	{
 		  //
 		 // ATTRIBUTES

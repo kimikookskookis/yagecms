@@ -23,6 +23,11 @@
 		 // METHODS
 		//
 		
+		public function AddToBlock(View $view)
+		{
+			
+		}
+		
 		public function VarDump($html = true)
 		{
 			$dump = parent::VarDump($html);
