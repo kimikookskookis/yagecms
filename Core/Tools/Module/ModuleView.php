@@ -84,7 +84,7 @@
 			EventManager::Instance()->TriggerEvent("YageCMS.Core.ModuleViewSet");
 		}
 		
-		public static function CallModule($module, $view = "standard", $action = "default")
+		public static function CallModule($module, $view = "default", $action = "default")
 		{
 			if(!is_null(self::$current))
 			{
