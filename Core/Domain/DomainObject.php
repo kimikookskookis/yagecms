@@ -8,26 +8,83 @@
 	use \YageCMS\Core\Tools\StringTools;
 	use \YageCMS\Core\DomainAccess\DomainObjectAccess;
 	
+	/**
+	 * This is the base class for all Domain Classes
+	 * 
+	 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+	 * @version 1.0
+	 * @since 1.0
+	 */
 	abstract class DomainObject
 	{
 		  //
 		 // ATTRIBUTES
 		//
 		
-		private /*(int)*/ $id;
-		private /*(int)*/ $created;
-		private /*(User)*/ $createdby;
-		private /*(int)*/ $modified;
-		private /*(User)*/ $modifiedby;
-		private /*(int)*/ $deleted;
-		private /*(User)*/ $deletedby;
-		private /*(boolean)*/ $stored;
-		private /*(array<string>)*/ $changedfields;
+		/**
+		 * The ID of the Domain (a GUID)
+		 * @var string
+		 */
+		private $id;
+		
+		/**
+		 * A timestamp of when the object has been saved to the database
+		 * @var integer
+		 */
+		private $created;
+		
+		/**
+		 * A reference to the user which created the object
+		 * @var User
+		 */
+		private $createdby;
+		
+		/**
+		 * A timestamp of when the object has last been modified
+		 * @var integer
+		 */
+		private $modified;
+		
+		/**
+		 * A reference to the user which last modified the object
+		 * @var User
+		 */
+		private $modifiedby;
+		
+		/**
+		 * A timestamp of when the object has been deleted
+		 * @var integer
+		 */
+		private $deleted;
+		
+		/**
+		 * A reference to the user which deleted the object
+		 * @var User
+		 */
+		private $deletedby;
+		
+		/**
+		 * Marks the object as persistent
+		 * @var boolean
+		 */
+		private $stored;
+		
+		/**
+		 * Features all the fields which have changed since the object
+		 * has been read from the database
+		 * @var array&lt;string&gt;
+		 */
+		private $changedfields;
 		
 		  //
 		 // CONSTRUCTOR
 		//
-		
+
+		/**
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 */
 		public function __construct()
 		{
 			$this->stored = false;
@@ -38,6 +95,16 @@
 		 // METHODS
 		//
 		
+		/**
+		 * Creates a new dataset in the database.
+		 * If the dataset is already saved, a copy will be created
+		 * 
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 * 
+		 * @return boolean
+		 */
 		public function Create()
 		{
 			$this->ID = StringTools::GenerateGUID();
@@ -52,22 +119,53 @@
 			return DomainObjectAccess::Create($type, $values);
 		}
 		
+		/**
+		 * Modifies an existing record.
+		 * If the record doesn't exist yet, an error will be created
+		 * 
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 * 
+		 * @return boolean
+		 */
 		public function Modify()
 		{
 			$this->modified = time();
+			$this->modifiedby = User::GetCurrentUser();
 			
 			$connection = DatabaseConnection::GetConnection("default");
 			return DatabaseAccess::Modify($this);
 		}
 		
+		/**
+		 * Deletes an existing record.
+		 * If the record doesn't exist yet, an error will be created
+		 * 
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 * 
+		 * @return boolean
+		 */
 		public function Delete()
 		{
 			$this->deleted = time();
+			$this->deletedby = User::GetCurrentUser();
 			
 			$connection = DatabaseConnection::GetConnection("default");
 			return DatabaseAccess::Delete($this);
 		}
 		
+		/**
+		 * Returns the type of the object (without namespaces)
+		 * 
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 * 
+		 * @return string The name of the Domain Class
+		 */
 		private function GetType()
 		{
 			$type = get_called_class();
@@ -77,21 +175,17 @@
 			return $type;
 		}
 		
-		private function GetChangedValues()
-		{
-			$values = array();
-			
-			foreach($this->changedfields as $field)
-			{
-				$value = $this->$field;
-				$field = strtolower($field);
-				
-				$values[$field] = $value;
-			}
-			
-			return $values;
-		}
-		
+		/**
+		 * Creates output of this object (maybe more accessible than <code>var_dump</code>)
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 *
+		 * @var boolean $html Whether to return HTML or text
+		 * 
+		 * @return string the var dump
+		 */
 		public function VarDump($html = true)
 		{
 			$dump = null;
@@ -134,7 +228,16 @@
 			
 			return $dump;
 		}
-
+		
+		/**
+		 * Returns the object as a string (by default its ID)
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 * 
+		 * @return string The ID
+		 */
 		public function __tostring()
 		{
 			return $this->ID;
@@ -146,6 +249,15 @@
 		
 		# ID
 		
+		/**
+		 * Returns the ID of the current object
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 * 
+		 * @return string
+		 */
 		private function GetID()
 		{
 			return $this->id;
@@ -158,6 +270,15 @@
 		
 		# Created
 		
+		/**
+		 * Returns the timestamp of when the object was created
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 * 
+		 * @return string Y-m-d H:i:s of the timestamp
+		 */
 		private function GetCreated()
 		{
 			return date("Y-m-d H:i:s",$this->created);
@@ -185,6 +306,15 @@
 		
 		# Modified
 		
+		/**
+		 * Returns the timestamp of when the object was modified
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 * 
+		 * @return string Y-m-d H:i:s of the timestamp
+		 */
 		private function GetModified()
 		{
 			return date("Y-m-d H:i:s",$this->modified);
@@ -212,6 +342,15 @@
 		
 		# Deleted
 		
+		/**
+		 * Returns the timestamp of when the object was deleted
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 * 
+		 * @return string/null Y-m-d H:i:s of the timestamp (or NULL if the object is not deleted)
+		 */
 		private function GetDeleted()
 		{
 			return (!is_null($this->deleted) ? date("Y-m-d H:i:s",$this->deleted) : null);
@@ -250,15 +389,40 @@
 		}
 		
 		# Changed Fields
+		
 		private function GetChangedFields()
 		{
 			return $this->changedfields;
+		}
+		
+		# Changed Values
+		
+		private function GetChangedValues()
+		{
+			$values = array();
+				
+			foreach($this->changedfields as $field)
+			{
+				$value = $this->$field;
+				$field = strtolower($field);
+		
+				$values[$field] = $value;
+			}
+				
+			return $values;
 		}
 		
 		  //
 		 // PROPERTIES
 		//
 		
+		/**
+		 * The getter directs properties ($this->Property) to a getter ($this->GetPropery())
+		 * 
+		 * @param unknown $field
+		 * @throws GetterNotDeclaredException
+		 * @return unknown
+		 */
 		final public function __get($field)
 		{
 			switch($field)
