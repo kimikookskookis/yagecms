@@ -14,7 +14,7 @@
 			
 			/*
 			 * This event shouldn't be altered!
-			 * It calls the URL-Handler
+			 * It calls the URI-Handler
 			 */
 			EventManager::Instance()->TriggerEvent("YageCMS.Core.Rendering");
 			
