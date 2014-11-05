@@ -1,6 +1,11 @@
 <?php
 	namespace YageCMS\Core\Tools;
 	
+	/**
+	 * @author Dominik Jahn
+	 * @version 1.0
+	 * @since 1.0
+	 */
 	class StringTools
 	{
 		public static function GenerateGUID()
@@ -44,6 +49,36 @@
 			}
 			
 			return $camelcase;
+		}
+		
+		/**
+		 * This method doesn't only trim the start and end of the line,
+		 * it also trims every single line between
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 *
+		 * @param string $string The string to be trimmed
+		 * @param boolean/null $nocheck Set to true to avoid parsing PHPDoc (not recommended, but used by the PHPDoc-parser itself to avoid a never-ending recursion loop)
+		 * @return string $result The trimmed string
+		 */
+		public static function FullTrim($string, $nocheck = false)
+		{
+			if(!$nocheck)
+			{
+				FunctionCheck::CheckMethodParameters(__METHOD__, func_get_args());
+			}
+				
+			$string = explode("\n",trim($string));
+				
+			$result = null;
+				
+			foreach($string as $line)
+			{
+				$result .= trim($line)."\n";
+			}
+				
+			return $result;
 		}
 	}
 ?>
