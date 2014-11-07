@@ -7,7 +7,8 @@
 	    \YageCMS\Core\DatabaseInterface\ConnectionManager,
 	    \YageCMS\Core\Tools\StringTools,
 	    \YageCMS\Core\DomainAccess\DomainObjectAccess,
-	    \YageCMS\Core\Tools\FunctionCheck;
+	    \YageCMS\Core\Tools\FunctionCheck,
+	    \YageCMS\Core\Exception\ValueCannotBeNullException;
 	
 	/**
 	 * This is the base class for all Domain Classes
@@ -257,7 +258,7 @@
 		 * @version 1.0
 		 * @since 1.0
 		 * 
-		 * @return string
+		 * @return string/null
 		 */
 		private function GetID()
 		{
@@ -313,6 +314,9 @@
 		
 		# CreatedBy
 		
+		/**
+		 * @return \YageCMS\Core\Domain\User/null
+		 */
 		private function GetCreatedBy()
 		{
 			return $this->createdby;
@@ -367,6 +371,9 @@
 		
 		# ModifiedBy
 		
+		/**
+		 * @return \YageCMS\Core\Domain\User/null
+		 */
 		private function GetModifiedBy()
 		{
 			return $this->modifiedby;
@@ -419,6 +426,9 @@
 			$this->deleted = $value;
 		}
 		
+		/**
+		 * @return boolean
+		 */
 		private function GetIsDeleted()
 		{
 			return ($this->deleted ? true : false);
@@ -426,6 +436,9 @@
 		
 		# DeletedBy
 		
+		/**
+		 * @return \YageCMS\Core\Domain\User/null
+		 */
 		private function GetDeletedBy()
 		{
 			return $this->deletedby;
@@ -513,12 +526,15 @@
 					}
 					
 					// Find the method
-					$method = new \ReflectionMethod($class, $method);
-					$method->setAccessible(true);
+					$refMethod = new \ReflectionMethod($class, $method);
+					$refMethod->setAccessible(true);
 					
 					// And execute it
-					$value = $method->invoke($this);
-					$method->setAccessible(false);
+					$value = $refMethod->invoke($this);
+					$refMethod->setAccessible(false);
+					
+					// Check the return value
+					FunctionCheck::CheckMethodReturnValue($class."::".$method, $value);
 					
 					return $value;
 			}
@@ -559,7 +575,16 @@
 					
 					// Check if the current value (if any) equals the new value
 					// If it doesn't, the field is to be declared as changed
-					$currentValue = $this->__get($field);
+					$currentValue = null;
+					
+					try
+					{
+						$currentValue = $this->__get($field);
+					}
+					catch(ValueCannotBeNullException $e)
+					{
+						// ignore
+					}
 					
 					if($currentValue <> $value)
 					{

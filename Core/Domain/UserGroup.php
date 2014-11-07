@@ -36,6 +36,9 @@
 		
 		# Name
 		
+		/**
+		 * @return string
+		 */
 		private function GetName()
 		{
 			return $this->name;

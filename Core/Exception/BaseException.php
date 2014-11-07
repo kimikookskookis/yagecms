@@ -41,4 +41,7 @@
 	 */
 	
 	class NoPHPDocCommentFoundForMethodOrFunctionException extends BaseException {}
+	class MethodDoesNotExistException extends BaseException {}
+	class ValueCannotBeNullException extends BaseException {}
+	class NoReturnTypeDeclaredException extends BaseException {}
 ?>

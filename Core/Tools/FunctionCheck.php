@@ -1,7 +1,10 @@
 <?php
 	namespace YageCMS\Core\Tools;
 	
-	use \YageCMS\Core\Exception\NoPHPDocCommentFoundForMethodOrFunctionException;
+	use \YageCMS\Core\Exception\NoPHPDocCommentFoundForMethodOrFunctionException,
+	    \YageCMS\Core\Exception\MethodDoesNotExistException,
+	    \YageCMS\Core\Exception\ValueCannotBeNullException,
+	    \YageCMS\Core\Exception\NoReturnTypeDeclaredException;
 	
 	/**
 	 * Some methods to validate function input and output
@@ -99,7 +102,6 @@
 		 *
 		 * @return boolean
 		 */
-		
 		private static function CheckParameters($refMethod, $parameters)
 		{
 			$method = $refMethod->getName();
@@ -206,6 +208,200 @@
 					{
 						throw new ParameterTypeMismatchWrongInstanceTypeException(array($method, $originalAllowedTypes, $name, $paramNum, $realType));
 					}
+				}
+			}
+			
+			return true;
+		}
+		
+		/**
+		 * Checks if the value return by a method is valid
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 *
+		 * @param ReflectionMethod/ReflectionFunction $method The method/function as reflected object
+		 * @param mixed $value The value returned by the method
+		 *
+		 * @return boolean
+		 */
+		public static function CheckMethodReturnValue($method, $value)
+		{
+			// The parameter $method needs to be split by :: to read the class name and method name
+			$method = explode('::',$method);
+			$class = $method[0];
+			$method = $method[1];
+			
+			if(!method_exists($class, $method))
+			{
+				$logcode = LogManager::_($class."::".$method);
+				throw new MethodDoesNotExistException($logcode);
+			}
+			
+			// ReflectionMethod allows us to read the PHPDoc Comment
+			$refMethod = new \ReflectionMethod($class, $method);
+		
+			return self::CheckReturnValue($refMethod, $value);
+		}
+		
+		/**
+		 * Checks if the value return by a function is valid
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 *
+		 * @param ReflectionMethod/ReflectionFunction $method The method/function as reflected object
+		 * @param mixed $value The value returned by the method
+		 *
+		 * @return boolean
+		 */
+		public static function CheckFunctionReturnValue($function, $value)
+		{
+			if(!function_exists($function))
+			{
+				throw new FunctionDoesNotExistException($function);
+			}
+		
+			// ReflectionMethod allows us to read the PHPDoc Comment
+			$refFunction = new \ReflectionFunction($function);
+		
+			return self::CheckReturnValue($refFunction, $value);
+		}
+		
+		/**
+		 * Checks if the value return by a method or function is valid
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 *
+		 * @param ReflectionMethod/ReflectionFunction $method The method/function as reflected object
+		 * @param mixed $value The value returned by the method
+		 *
+		 * @return boolean
+		 */
+		private static function CheckReturnValue($refMethod, $value)
+		{
+			$method = $refMethod->getName();
+				
+			if($refMethod instanceof \ReflectionMethod)
+			{
+				$method = $refMethod->getDeclaringClass()->getName().($refMethod->isStatic() ? '::' : '->').$method;
+			}
+				
+			// Read the PHPDoc comment (everything between /** and */ above the function call
+			$doccom = $refMethod->getDocComment();
+				
+			if(!strlen($doccom))
+			{
+				$logcode = LogManager::_($method);
+				throw new NoPHPDocCommentFoundForMethodOrFunctionException($logcode);
+			}
+				
+			// Trim the PHPDoc-Comment (but make sure that the second parameter is set to 'true', else you get some nasty memory problem
+			$doccom = StringTools::FullTrim(substr($doccom,3,-2), true);
+			
+			// Get @return type
+			$result = array();
+			$has_return = preg_match('{@return ([a-zA-Z0-9\\\_/]+)}miu',$doccom, $result);
+			# / = Multiple Types, \ = Namespaces
+
+			if(!$has_return)
+			{
+				$logcode = LogManager::_("No return type declared for '".$method."'");
+				throw new NoReturnTypeDeclaredException($logcode);
+			}
+			
+			$type = $result[1];
+			
+			try
+			{
+				return self::CheckValueAgainstType($value, $type);
+			}
+			catch(ValueCannotBeNullException $e)
+			{
+				$logcode = LogManager::_("Value cannot be null for method/function '".$method."', only '".$type."' allowed");
+				throw new ValueCannotBeNullException($logcode);
+			}
+		}
+		
+		public static function CheckValueAgainstType($value, $type)
+		{
+			// This is the type and name of the parameter as of PHPDoc
+			$allowedType = $type;
+			
+			// Convert &lt; and &gt; to < and > (because it's required for many IDEs to convert them, but we don't like them this way
+			$allowedType = str_replace(array('&lt;','&gt;'), array('<','>'), $allowedType);
+		
+			$originalAllowedTypes = $allowedType;
+		
+			/*
+			 * Check if the parameter allows for multiple types
+			 * 		(e.g. User/int/null, which means: the parameter can be an object of the Type 'User',
+			 *       the ID of a user in the database (int), or it can be omitted (null)
+			 */
+			if(strpos($allowedType,'/'))
+			{
+				$allowedTypes = explode('/',$allowedType);
+			}
+			else
+			{
+				$allowedTypes = array($allowedType);
+			}
+		
+			// If the parameter is not given, check if NULL is allowed (which means it can be omitted)
+			if(is_null($value))
+			{
+				if(in_array('null',$allowedTypes))
+				{
+					return true;
+				}
+				else
+				{
+					$logcode = LogManager::_("Value cannot be null, only '".$originalAllowedTypes."' allowed");
+					throw new ValueCannotBeNullException($logcode);
+				}
+			}
+		
+			// Remove 'null' as an allowed type (third parameter same as above with FullTrim)
+			ArrayTools::RemoveValue($allowedTypes, 'null', true);
+		
+			// This represents the actual value of the parameter
+			$realType = gettype($value);
+		
+			$isLastAllowedType = false;
+		
+			foreach($allowedTypes as $typeNum => $allowedType)
+			{
+				$isLastAllowedType = ($typeNum+1 == count($allowedTypes) ? true : false);
+					
+				if(in_array($allowedType,array('integer','string','boolean','float')))
+				{
+					if($realType <> $allowedType)
+					{
+						throw new VariableTypeMismatchException();
+					}
+					else
+					{
+						break;
+					}
+				}	// Though array<type> and array<keyType, valueType> are possible, this check isn't implemented yet.
+				else if(substr($allowedType,0,5) == 'array')
+				{
+					if(!is_array($value))
+					{
+						throw new VariableNotAnArrayException();
+					}
+					else
+					{
+						break;
+					}
+				}
+				else if(!($value instanceof $allowedType) && $isLastAllowedType)
+				{
+					throw new VariableNotInstanceOfClassException();
 				}
 			}
 			

@@ -20,6 +20,9 @@
 		
 		# Identifier
 		
+		/**
+		 * @return string
+		 */
 		private function GetIdentifier()
 		{
 			return $this->identifier;
@@ -35,6 +38,9 @@
 		
 		# Name
 		
+		/**
+		 * @return string
+		 */
 		private function GetName()
 		{
 			return $this->name;
@@ -50,6 +56,9 @@
 		
 		# Value
 		
+		/**
+		 * @return string
+		 */
 		private function GetValue()
 		{
 			return $this->value;
@@ -65,6 +74,9 @@
 		
 		# Expiration
 		
+		/**
+		 * @return int
+		 */
 		private function GetExpiration()
 		{
 			return $this->expiration;

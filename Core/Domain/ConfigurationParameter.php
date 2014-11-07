@@ -20,6 +20,9 @@
 		
 		# Scope
 		
+		/**
+		 * @return string
+		 */
 		private function GetScope()
 		{
 			return $this->scope;
@@ -35,6 +38,9 @@
 		
 		# ScopeValue
 		
+		/**
+		 * @return string
+		 */
 		private function GetScopeValue()
 		{
 			return $this->scope;
@@ -50,6 +56,9 @@
 		
 		# Name
 		
+		/**
+		 * @return string
+		 */
 		private function GetName()
 		{
 			return $this->name;
@@ -65,6 +74,9 @@
 		
 		# Value
 		
+		/**
+		 * @return string
+		 */
 		private function GetValue()
 		{
 			return $this->value;

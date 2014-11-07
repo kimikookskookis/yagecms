@@ -119,8 +119,8 @@
 				$method = (isset($xmlAttributes["method"]) ? (string) $xmlAttributes["method"] : "GET");
 				$position = (isset($xmlAttributes["position"]) ? (string) $xmlAttributes["position"] : "last");
 				
-				if($position == "first") $position = true;
-				else if($position == "last") $position = false;
+				//if($position == "first") $position = true;
+				//else if($position == "last") $position = false;
 				
 				$pattern = (string) $xmlAttributes["pattern"];
 				$handler = (string) $xmlAttributes["handler"];
@@ -139,6 +139,8 @@
 						$ppattern = (string) $xmlAttributes["pattern"];
 						
 						$parameter = new URIHandlerParameter($pname, $ppattern);
+						$parameter->URIHandler = $handler;
+						
 						$handler->AddParameter($parameter);
 					}
 				}
@@ -161,8 +163,8 @@
 				$method = (isset($xmlAttributes["method"]) ? (string) $xmlAttributes["method"] : "GET");
 				$position = (isset($xmlAttributes["position"]) ? (string) $xmlAttributes["position"] : "last");
 				
-				if($position == "first") $position = true;
-				else if($position == "last") $position = false;
+				//if($position == "first") $position = true;
+				//else if($position == "last") $position = false;
 				
 				$pattern = (string) $xmlAttributes["pattern"];
 				$handler = (string) $xmlAttributes["handler"];
@@ -181,6 +183,8 @@
 						$ppattern = (string) $xmlAttributes["pattern"];
 						
 						$parameter = new URIHandlerParameter($pname, $ppattern);
+						$parameter->URIHandler = $handler;
+						
 						$handler->AddParameter($parameter);
 					}
 				}

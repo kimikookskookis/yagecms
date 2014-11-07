@@ -15,6 +15,17 @@
 		private /*(Website)*/ $website;
 		
 		  //
+		 // CONSTRUCTOR
+		//
+		
+		public function __construct()
+		{
+			$this->website = Website::GetCurrentWebsite();
+			
+			parent::__construct();
+		}
+		
+		  //
 		 // METHODS
 		//
 		
@@ -48,6 +59,9 @@
 		
 		# Website
 		
+		/**
+		 * @return \YageCMS\Core\Domain\Website $value
+		 */
 		private function GetWebsite()
 		{
 			return $this->website;

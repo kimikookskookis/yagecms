@@ -29,6 +29,9 @@
 		
 		# URIHandler
 		
+		/**
+		 * @return \YageCMS\Core\Domain\URIHandler
+		 */
 		private function GetURIHandler()
 		{
 			return $this->urihandler;
@@ -44,6 +47,9 @@
 		
 		# Name
 		
+		/**
+		 * @return string
+		 */
 		private function GetName()
 		{
 			return $this->name;
@@ -59,6 +65,9 @@
 		
 		# Pattern
 		
+		/**
+		 * @return string
+		 */
 		private function GetPattern()
 		{
 			return $this->pattern;

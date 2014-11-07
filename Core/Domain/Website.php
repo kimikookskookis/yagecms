@@ -39,6 +39,9 @@
 		
 		# Hostname
 		
+		/**
+		 * @return string
+		 */
 		private function GetHostname()
 		{
 			return $this->hostname;

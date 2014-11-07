@@ -72,6 +72,9 @@
 		
 		# Loginname
 		
+		/**
+		 * @return string
+		 */
 		private function GetLoginname()
 		{
 			return $this->loginname;
@@ -87,6 +90,9 @@
 		
 		# Password
 		
+		/**
+		 * @return string
+		 */
 		private function GetPassword()
 		{
 			return $this->password;
@@ -102,6 +108,9 @@
 		
 		# PasswordSalt
 		
+		/**
+		 * @return string
+		 */
 		private function GetPasswordSalt()
 		{
 			return $this->passwordsalt;
@@ -117,6 +126,9 @@
 		
 		# LastPasswordChange
 		
+		/**
+		 * @return string
+		 */
 		private function GetLastPasswordChange()
 		{
 			return date("Y-m-d H:i:s",$this->lastpasswordchange);
@@ -135,6 +147,9 @@
 		
 		# EmailAddress
 		
+		/**
+		 * @return string
+		 */
 		private function GetEmailAddress()
 		{
 			return $this->emailaddress;
@@ -150,6 +165,9 @@
 		
 		# UserGroup
 		
+		/**
+		 * @return \YageCMS\Core\Domain\UserGroup
+		 */
 		private function GetUserGroup()
 		{
 			return $this->usergroup;

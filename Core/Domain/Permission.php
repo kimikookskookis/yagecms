@@ -20,6 +20,9 @@
 		
 		# UserGroup
 		
+		/**
+		 * @return \YageCMS\Core\Domain\UserGroup
+		 */
 		private function GetUserGroup()
 		{
 			return $this->usergroup;
@@ -35,6 +38,9 @@
 		
 		# Name
 		
+		/**
+		 * @return string
+		 */
 		private function GetName()
 		{
 			return $this->name;
@@ -50,6 +56,9 @@
 		
 		# Value
 		
+		/**
+		 * @return boolean
+		 */
 		private function GetValue()
 		{
 			return $this->value;

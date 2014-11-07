@@ -31,6 +31,7 @@
 			$this->method = $method;
 			$this->pattern = $pattern;
 			$this->handler = $handler;
+			$this->position = $position;
 		}
 		
 		  //
@@ -129,6 +130,9 @@
 		
 		# Name
 		
+		/**
+		 * @return string
+		 */
 		private function GetName()
 		{
 			return $this->name;
@@ -144,6 +148,9 @@
 		
 		# Pattern
 		
+		/**
+		 * @return string
+		 */
 		private function GetPattern()
 		{
 			return $this->pattern;
@@ -159,6 +166,9 @@
 		
 		# Method
 		
+		/**
+		 * @return string
+		 */
 		private function GetMethod()
 		{
 			return $this->method;
@@ -174,6 +184,9 @@
 		
 		# Handler
 		
+		/**
+		 * @return string
+		 */
 		private function GetHandler()
 		{
 			return $this->handler;
@@ -189,6 +202,9 @@
 		
 		# Position
 		
+		/**
+		 * @return string
+		 */
 		private function GetPosition()
 		{
 			return $this->position;
@@ -204,6 +220,9 @@
 		
 		# Attributes
 		
+		/**
+		 * @return array/null
+		 */
 		private function GetParameters()
 		{
 			if($this->IsPersistent && is_null($this->parameters))

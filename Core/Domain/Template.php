@@ -65,6 +65,9 @@
 		
 		# Name
 		
+		/**
+		 * @return string
+		 */
 		private function GetName()
 		{
 			return $this->name;
@@ -80,6 +83,9 @@
 		
 		# Title
 		
+		/**
+		 * @return string/null
+		 */
 		private function GetTitle()
 		{
 			return $this->title;
@@ -95,6 +101,9 @@
 		
 		# Type
 		
+		/**
+		 * @return string
+		 */
 		private function GetType()
 		{
 			return $this->type;
@@ -110,6 +119,9 @@
 		
 		# Code
 		
+		/**
+		 * @return string
+		 */
 		private function GetCode()
 		{
 			if(is_null($this->code))
@@ -139,6 +151,9 @@
 		
 		# Location
 		
+		/**
+		 * @return string
+		 */
 		private function GetLocation()
 		{
 			if(is_null($this->location))

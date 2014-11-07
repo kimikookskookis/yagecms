@@ -19,6 +19,9 @@
 		
 		# Name
 		
+		/**
+		 * @return string
+		 */
 		private function GetName()
 		{
 			return $this->name;
@@ -34,6 +37,9 @@
 		
 		# Location
 		
+		/**
+		 * @return string
+		 */
 		private function GetLocation()
 		{
 			switch($this->location)
@@ -61,6 +67,9 @@
 		
 		# Status
 		
+		/**
+		 * @return string
+		 */
 		private function GetStatus()
 		{
 			switch($this->status)
