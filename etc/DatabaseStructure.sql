@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 04, 2014 at 08:25 PM
+-- Generation Time: Nov 08, 2014 at 12:48 AM
 -- Server version: 5.6.20
 -- PHP Version: 5.5.15
 
@@ -120,6 +120,51 @@ CREATE TABLE IF NOT EXISTS `permission` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `registrygroup`
+--
+
+CREATE TABLE IF NOT EXISTS `registrygroup` (
+  `id` char(36) NOT NULL,
+  `website` char(36) NOT NULL,
+  `module` varchar(50) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `label` varchar(100) DEFAULT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `parent` char(36) DEFAULT NULL,
+  `created` datetime NOT NULL,
+  `createdby` char(36) DEFAULT NULL,
+  `modified` datetime NOT NULL,
+  `modifiedby` char(36) DEFAULT NULL,
+  `deleted` datetime DEFAULT NULL,
+  `deletedby` char(36) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `registryitem`
+--
+
+CREATE TABLE IF NOT EXISTS `registryitem` (
+  `id` char(36) NOT NULL,
+  `website` char(36) NOT NULL,
+  `type` enum('VIEW','PLUGIN','TEMPLATE','PERMISSION','PERMISSIONGROUP','SETTING','SETTINGGROUP','LANGUAGESTRING','SETUP') NOT NULL,
+  `module` varchar(50) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `label` varchar(100) DEFAULT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `group` char(36) DEFAULT NULL,
+  `created` datetime NOT NULL,
+  `createdby` char(36) DEFAULT NULL,
+  `modified` datetime NOT NULL,
+  `modifiedby` char(36) DEFAULT NULL,
+  `deleted` datetime DEFAULT NULL,
+  `deletedby` char(36) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `template`
 --
 
@@ -223,6 +268,25 @@ CREATE TABLE IF NOT EXISTS `usergroup` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `usergroupitem`
+--
+
+CREATE TABLE IF NOT EXISTS `usergroupitem` (
+  `id` char(36) NOT NULL,
+  `website` char(36) NOT NULL,
+  `usergroup` char(36) NOT NULL,
+  `user` char(36) NOT NULL,
+  `created` datetime NOT NULL,
+  `createdby` char(36) DEFAULT NULL,
+  `modified` datetime NOT NULL,
+  `modifiedby` char(36) DEFAULT NULL,
+  `deleted` datetime DEFAULT NULL,
+  `deletedby` char(36) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `website`
 --
 
@@ -272,6 +336,18 @@ ALTER TABLE `permission`
  ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `website` (`website`,`usergroup`,`name`,`deleted`);
 
 --
+-- Indexes for table `registrygroup`
+--
+ALTER TABLE `registrygroup`
+ ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `website` (`website`,`name`,`deleted`);
+
+--
+-- Indexes for table `registryitem`
+--
+ALTER TABLE `registryitem`
+ ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `website` (`website`,`type`,`name`,`deleted`);
+
+--
 -- Indexes for table `template`
 --
 ALTER TABLE `template`
@@ -300,6 +376,12 @@ ALTER TABLE `user`
 --
 ALTER TABLE `usergroup`
  ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `website` (`website`,`name`,`deleted`);
+
+--
+-- Indexes for table `usergroupitem`
+--
+ALTER TABLE `usergroupitem`
+ ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `website` (`website`,`usergroup`,`user`,`deleted`);
 
 --
 -- Indexes for table `website`
