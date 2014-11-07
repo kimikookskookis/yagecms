@@ -25,6 +25,9 @@
 			return $this->identifier;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetIdentifier($value)
 		{
 			$this->identifier = $value;
@@ -37,6 +40,9 @@
 			return $this->name;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetName($value)
 		{
 			$this->name = $value;
@@ -49,6 +55,9 @@
 			return $this->value;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetValue($value)
 		{
 			$this->value = $value;
@@ -61,6 +70,9 @@
 			return $this->expiration;
 		}
 		
+		/**
+		 * @param string/int $value
+		 */
 		private function SetExpiration($value)
 		{
 			$this->expiration = $value;

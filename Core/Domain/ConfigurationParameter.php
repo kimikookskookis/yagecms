@@ -25,6 +25,9 @@
 			return $this->scope;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetScope($value)
 		{
 			$this->scope = $value;
@@ -37,6 +40,9 @@
 			return $this->scope;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetScopeValue($value)
 		{
 			$this->scopevalue = $value;
@@ -49,6 +55,9 @@
 			return $this->name;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetName($value)
 		{
 			$this->name = $value;
@@ -61,6 +70,9 @@
 			return $this->value;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetValue($value)
 		{
 			$this->value = $value;

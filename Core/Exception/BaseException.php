@@ -35,4 +35,10 @@
 	class NoConfigurationParametersFoundByScopevalueException extends BaseException {}
 	
 	class NoTemplateFoundInExpectedLocationException extends BaseException {}
+	
+	/*
+	 * Function Check
+	 */
+	
+	class NoPHPDocCommentFoundForMethodOrFunctionException extends BaseException {}
 ?>

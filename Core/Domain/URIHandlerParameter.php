@@ -34,7 +34,10 @@
 			return $this->urihandler;
 		}
 		
-		private function SetURIHandleR(URIHandler $value)
+		/**
+		 * @param \YageCMS\Core\Domain\URIHandler $value
+		 */
+		private function SetURIHandler(URIHandler $value)
 		{
 			$this->urihandler = $value;
 		}
@@ -46,6 +49,9 @@
 			return $this->name;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetName($value)
 		{
 			$this->name = $value;
@@ -58,6 +64,9 @@
 			return $this->pattern;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetPattern($value)
 		{
 			$this->pattern = $value;

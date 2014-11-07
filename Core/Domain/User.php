@@ -77,6 +77,9 @@
 			return $this->loginname;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetLoginname($value)
 		{
 			$this->loginname = $value;
@@ -89,6 +92,9 @@
 			return $this->password;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetPassword($value)
 		{
 			$this->password = $value;
@@ -101,6 +107,9 @@
 			return $this->passwordsalt;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetPasswordSalt($value)
 		{
 			$this->passwordsalt = $value;
@@ -113,6 +122,9 @@
 			return date("Y-m-d H:i:s",$this->lastpasswordchange);
 		}
 		
+		/**
+		 * @param string/int $value
+		 */
 		private function SetLastPasswordChange($value)
 		{
 			if(!is_int($value))
@@ -128,6 +140,9 @@
 			return $this->emailaddress;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetEmailAddress($value)
 		{
 			$this->emailaddress = $value;
@@ -140,6 +155,9 @@
 			return $this->usergroup;
 		}
 		
+		/**
+		 * @param \YageCMS\Core\Domain\UserGroup $value
+		 */
 		private function SetUserGroup(UserGroup $value)
 		{
 			$this->usergroup = $value;

@@ -1,11 +1,14 @@
 <?php
 	namespace YageCMS\Core\Tools;
 	
+	use \YageCMS\Core\Exception\NoPHPDocCommentFoundForMethodOrFunctionException;
+	
 	/**
 	 * Some methods to validate function input and output
 	 * 
 	 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
 	 * @version 1.0
+	 * @since 1.0
 	 */
 	class FunctionCheck
 	{
@@ -38,7 +41,7 @@
 			
 			if(!method_exists($class, $method))
 			{
-				throw new MethodDoesNotExistException(array($class, $method));
+				throw new MethodDoesNotExistException();
 			}
 			
 			// ReflectionMethod allows us to read the PHPDoc Comment
@@ -111,7 +114,8 @@
 			
 			if(!strlen($doccom))
 			{
-				throw new NoPHPDocCommentFoundForMethodOrFunctionException($method);
+				$logcode = LogManager::_($method);
+				throw new NoPHPDocCommentFoundForMethodOrFunctionException($logcode);
 			}
 			
 			// Trim the PHPDoc-Comment (but make sure that the second parameter is set to 'true', else you get some nasty memory problem

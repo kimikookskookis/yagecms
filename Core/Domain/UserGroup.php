@@ -41,6 +41,9 @@
 			return $this->name;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetName($value)
 		{
 			$this->name = $value;

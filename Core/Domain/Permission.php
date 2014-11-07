@@ -25,6 +25,9 @@
 			return $this->usergroup;
 		}
 		
+		/**
+		 * @param \YageCMS\Core\Domain\UserGroup $value
+		 */
 		private function SetUserGroup(UserGroup $value)
 		{
 			$this->usergroup = $value;
@@ -37,6 +40,9 @@
 			return $this->name;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetName($value)
 		{
 			$this->name = $value;
@@ -49,6 +55,9 @@
 			return $this->value;
 		}
 		
+		/**
+		 * @param boolean $value
+		 */
 		private function SetValue($value)
 		{
 			$this->value = $value;

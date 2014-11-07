@@ -53,6 +53,9 @@
 			return $this->website;
 		}
 		
+		/**
+		 * @param \YageCMS\Core\Domain\Website $value
+		 */
 		private function SetWebsite(Website $value)
 		{
 			$this->website = $value;

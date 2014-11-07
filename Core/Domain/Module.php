@@ -24,6 +24,9 @@
 			return $this->name;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetName($value)
 		{
 			$this->name = $value;
@@ -41,6 +44,9 @@
 			}
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetLocation($value)
 		{
 			switch($value)
@@ -64,6 +70,9 @@
 			}
 		}
 		
+		/**
+		 * @param string/int $value
+		 */
 		private function SetStatus($value)
 		{
 			switch($value)

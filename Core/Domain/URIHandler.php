@@ -134,6 +134,9 @@
 			return $this->name;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetName($value)
 		{
 			$this->name = $value;
@@ -146,6 +149,9 @@
 			return $this->pattern;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetPattern($value)
 		{
 			$this->pattern = $value;
@@ -158,6 +164,9 @@
 			return $this->method;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetMethod($value)
 		{
 			$this->method = $value;
@@ -170,6 +179,9 @@
 			return $this->handler;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetHandler($value)
 		{
 			$this->handler = $value;
@@ -182,6 +194,9 @@
 			return $this->position;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetPosition($value)
 		{
 			$this->position = $value;

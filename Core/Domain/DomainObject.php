@@ -1,12 +1,13 @@
 <?php
 	namespace YageCMS\Core\Domain;
 	
-	use \YageCMS\Core\Tools\LogManager;
-	use \YageCMS\Core\Exception\SetterNotDeclaredException;
-	use \YageCMS\Core\Exception\GetterNotDeclaredException;
-	use \YageCMS\Core\DatabaseInterface\ConnectionManager;
-	use \YageCMS\Core\Tools\StringTools;
-	use \YageCMS\Core\DomainAccess\DomainObjectAccess;
+	use \YageCMS\Core\Tools\LogManager,
+	    \YageCMS\Core\Exception\SetterNotDeclaredException,
+	    \YageCMS\Core\Exception\GetterNotDeclaredException,
+	    \YageCMS\Core\DatabaseInterface\ConnectionManager,
+	    \YageCMS\Core\Tools\StringTools,
+	    \YageCMS\Core\DomainAccess\DomainObjectAccess,
+	    \YageCMS\Core\Tools\FunctionCheck;
 	
 	/**
 	 * This is the base class for all Domain Classes
@@ -263,6 +264,15 @@
 			return $this->id;
 		}
 		
+		/**
+		 * Sets the ID for the current object
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 * 
+		 * @param string $value
+		 */
 		private function SetID($value)
 		{
 			$this->id = $value;
@@ -284,6 +294,15 @@
 			return date("Y-m-d H:i:s",$this->created);
 		}
 		
+		/**
+		 * Sets the timestamp of when the object was created
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 * 
+		 * @param string/int $value
+		 */
 		private function SetCreated($value)
 		{
 			if(!is_int($value))
@@ -299,6 +318,15 @@
 			return $this->createdby;
 		}
 		
+		/**
+		 * Sets the user which created this object
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 * 
+		 * @param User/null $value
+		 */
 		private function SetCreatedBy(User $value = null)
 		{
 			$this->createdby = $value;
@@ -320,6 +348,15 @@
 			return date("Y-m-d H:i:s",$this->modified);
 		}
 		
+		/**
+		 * Sets the date of when the object was modified
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 * 
+		 * @param string/int $value
+		 */
 		private function SetModified($value)
 		{
 			if(!is_int($value))
@@ -335,6 +372,15 @@
 			return $this->modifiedby;
 		}
 		
+		/**
+		 * Sets the users which modified this object
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 * 
+		 * @param User/null $value
+		 */
 		private function SetModifiedBy(User $value = null)
 		{
 			$this->modifiedby = $value;
@@ -356,6 +402,15 @@
 			return (!is_null($this->deleted) ? date("Y-m-d H:i:s",$this->deleted) : null);
 		}
 		
+		/**
+		 * Sets the date when this object was deleted or null if it's not deleted
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 * 
+		 * @param string/int/null $value
+		 */
 		private function SetDeleted($value)
 		{
 			if(!is_int($value) && !is_null($value))
@@ -376,6 +431,15 @@
 			return $this->deletedby;
 		}
 		
+		/**
+		 * Sets the user which deleted this object
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 * 
+		 * @param User/null $value
+		 */
 		private function SetDeletedBy(User $value = null)
 		{
 			$this->deletedby = $value;
@@ -418,10 +482,14 @@
 		
 		/**
 		 * The getter directs properties ($this->Property) to a getter ($this->GetPropery())
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
 		 * 
-		 * @param unknown $field
+		 * @param string $field
 		 * @throws GetterNotDeclaredException
-		 * @return unknown
+		 * @return mixed The value returned by the getter
 		 */
 		final public function __get($field)
 		{
@@ -456,6 +524,17 @@
 			}
 		}
 		
+		/**
+		 * Redirects properties ($this->Property) to a setter ($this->SetProperty())
+		 *
+		 * @author Dominik Jahn &lt;dominik1991jahn@gmail.com&gt;
+		 * @version 1.0
+		 * @since 1.0
+		 * 
+		 * @param string $field
+		 * @param mixed $value
+		 * @throws SetterNotDeclaredException
+		 */
 		final public function __set($field, $value)
 		{
 			switch($field)
@@ -494,13 +573,18 @@
 						throw new SetterNotDeclaredException($logcode);
 					}
 					
+					// Check the parameters
+					FunctionCheck::CheckMethodParameters($class."::".$method, array($value));
+					
 					// Find the method
 					$method = new \ReflectionMethod($class, $method);
+					
 					$method->setAccessible(true);
 					
 					// And execute it
 					$method->invokeArgs($this, array($value));
 					$method->setAccessible(false);
+					
 					break;
 			}
 		}

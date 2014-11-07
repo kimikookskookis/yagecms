@@ -70,6 +70,9 @@
 			return $this->name;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetName($value)
 		{
 			$this->name = $value;
@@ -82,6 +85,9 @@
 			return $this->title;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetTitle($value)
 		{
 			$this->title = $value;
@@ -94,6 +100,9 @@
 			return $this->type;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetType($value)
 		{
 			$this->type = $value;
@@ -120,6 +129,9 @@
 			return $this->code;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetCode($value)
 		{
 			$this->code = $value;
@@ -137,6 +149,9 @@
 			return $this->location;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetLocation($value)
 		{
 			$this->location = $value;

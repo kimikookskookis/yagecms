@@ -44,6 +44,9 @@
 			return $this->hostname;
 		}
 		
+		/**
+		 * @param string $value
+		 */
 		private function SetHostname($value)
 		{
 			$this->hostname = $value;
