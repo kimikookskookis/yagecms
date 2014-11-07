@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Module>
 	<Name>Dummy Extension</Name>
+	<Description>Description of this extension</Description>
 	<Version>1.0a</Version>
 	<Author>
 		<Name>Dominik Jahn</Name>
@@ -43,7 +44,7 @@
 	</Views>
 	
 	<Plugins>
-		<View name="TestPlugin" />
+		<Plugin name="TestPlugin" />
 	</Plugins>
 	
 	<Setups>
