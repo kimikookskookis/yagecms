@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+	<Name>Dummy Extension</Name>
+	<Version>1.0</Version>
+	<Author>
+		<Name>Dominik Jahn</Name>
+		<Email>dominik1991jahn@gmail.com</Email>
+		<Company>My Company Ltd.</Company>
+		<Website>http://www.mycompany.ltd</Website>
+	</Author>
+	
+	<Requirements>
+		<YageCMS.Core>1.0.0</YageCMS.Core>
+	</Requirements>
+	
+	<Settings>
+		<Setting name="TestSetting" default="1" type="boolean" label="Test Setting" description="Description for Test Setting" />
+		<Setting name="SomeUser" default="CurrentUser" type="YageCMS.Core.Domain.User" label="Some User" description="Represents a user" />
+		<Setting name="SomeText" type="string" label="Some Text" description="This is a text value" />
+		<Group name="TestGroup" label="Test Group" description="Just a test group">
+			<Setting name="Select.Value" type="select" label="Select Value" description="Pick from pre-defined values">
+				<Value name="0" label="Null" />
+				<Value name="1" label="One" />
+				<Value name="2" label="Two" default="yes" />
+				<Value name="3" label="Three" />
+			</Setting>
+			
+			<Setting name="SomeLongerText" type="text" label="Some Longer Text" description="This is a textarea field" />
+		</Group>
+	</Settings>
+	
+	<Permissions>
+		<Permission name="Access" label="Access User Manager" />
+		<Group name="TestGroup" label="User Manager Permissions">
+			<Permission name="User.Create" label="Create Users" description="Allows users to create new users" />
+			<Permission name="User.Modify" label="Edit Users" description="Allows users to modify users" />
+			<Permission name="User.Delete" label="Delete Users" />
+		</Group>
+	</Permissions>
+	
+	<Views>
+		<View name="Overview" />
+	</Views>
+	
+	<Plugins>
+		<View name="TestPlugin" />
+	</Plugins>
+	
+	<Setups>
+		<Setup name="Overview">
+			<Template>Module.DummyModule.Overview.Default</Template>
+			<Sections>
+				<Section name="TopSection">
+					<InsertPlugin mode="replace" plugin="YageCMS.Modules.DummyModule.Plugins.TopSection" />
+				</Section>
+				<Section name="Sidebar">
+					<InsertPlugin mode="append" plugin="YageCMS.Modules.Content.Plugins.ContentBlock">
+						<Type>text</Type>
+						<Header>Lorem ipsum</Header>
+						<Subheader>dolor sit amet</Subheader>
+						<Content>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce cursus congue tellus quis dictum. Donec ac massa vitae sem ultricies convallis mollis non nisl.</Content>
+					</InsertPlugin>
+				</Section>
+			</Sections>
+		</Setup>
+	</Setups>
+	
+	<LanguageStrings>
+		<String>
+			<en>Hello World</en>
+			<es>Hola mundo</es>
+			<de>Hallo Welt</de>
+			<fr>Bonjour monde</fr>
+			<it>Ciao mondo</it>
+		</String>
+	</LanguageStrings>
+	
+	<Files>
+		<File name="index.html"><!-- base64-representation of file --></File>
+		<File name="Templates/template.html"><!-- base64-representation of file --></File>
+	</Files>
+</Module>
