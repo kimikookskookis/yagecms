@@ -53,16 +53,12 @@
 			$passwordsalt = $record->passwordsalt->String;
 			$lastpasswordchange = $record->lastpasswordchange->Timestamp;
 			$emailaddress = $record->emailaddress->String;
-			$usergroup = $record->usergroup->String;
-			
-			$usergroup = UserGroupAccess::Instance()->GetByID($usergroup);
 			
 			$object->Loginname = $loginname;
 			$object->Password = $password;
 			$object->PasswordSalt = $passwordsalt;
 			$object->LastPasswordChange = $lastpasswordchange;
 			$object->EmailAddress = $emailaddress;
-			$object->UserGroup = $usergroup;
 			
 			WebsiteDomainObjectAccess::Instance()->ConvertRecordToObject($record, $object);
 			

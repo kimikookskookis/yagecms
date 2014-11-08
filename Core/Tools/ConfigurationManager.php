@@ -145,29 +145,34 @@
 			
 			if(!in_array($path, $this->imported) && !is_null(User::GetCurrentUser()))
 			{
-				$parameters = null;
+				$usergroups = User::GetCurrentUser()->UserGroups;
 				
-				try
+				foreach($usergroups as $usergroup)
 				{
-					$parameters = ConfigurationParameterAccess::Instance()->GetByScopeValue("USERGROUP", User::GetCurrentUser()->UserGroup);
-				}
-				catch(NoConfigurationParametersFoundByScopevalueException $e)
-				{
-					//ignore
-				}
-				
-				if(count($parameters))
-				{
-					$namespace = "user";
+					$parameters = null;
 					
-					foreach($parameters as $parameter)
+					try
 					{
-						$path = $parameter->name;
-						$value = $parameter->value;
-						
-						$value = preg_replace_callback("#\{\\$([a-zA-Z0-9_]+):([a-zA-Z0-9\._]+)\}#", array($this,"ReplaceParameterReferences"), $value);
-						
-						$this->parameters[$namespace][$path] = $value;
+						$parameters = ConfigurationParameterAccess::Instance()->GetByScopeValue("USERGROUP", $usergroup);
+					}
+					catch(NoConfigurationParametersFoundByScopevalueException $e)
+					{
+						//ignore
+					}
+					
+					if(count($parameters))
+					{
+						$namespace = "user";
+							
+						foreach($parameters as $parameter)
+						{
+							$path = $parameter->name;
+							$value = $parameter->value;
+					
+							$value = preg_replace_callback("#\{\\$([a-zA-Z0-9_]+):([a-zA-Z0-9\._]+)\}#", array($this,"ReplaceParameterReferences"), $value);
+					
+							$this->parameters[$namespace][$path] = $value;
+						}
 					}
 				}
 			}

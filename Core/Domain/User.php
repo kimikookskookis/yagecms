@@ -1,16 +1,17 @@
 <?php
 	namespace YageCMS\Core\Domain;
 	
-	use \YageCMS\Core\Tools\ConfigurationManager;
-	use \YageCMS\Core\Tools\EventManager;
-	use \YageCMS\Core\Tools\RequestHeader;
-	use \YageCMS\Core\Domain\UserGroup;
-	use \YageCMS\Core\Tools\StringTools;
-	use \YageCMS\Core\Tools\SaltManager;
-	use \YageCMS\Core\Domain\Website;
-	use \YageCMS\Core\Domain\Cookie;
-	use \YageCMS\Core\DomainAccess\CookieAccess;
-	use \YageCMS\Core\DomainAccess\UserAccess;
+	use \YageCMS\Core\Tools\ConfigurationManager,
+	    \YageCMS\Core\Tools\EventManager,
+	    \YageCMS\Core\Tools\RequestHeader,
+	    \YageCMS\Core\Domain\UserGroup,
+	    \YageCMS\Core\Tools\StringTools,
+	    \YageCMS\Core\Tools\SaltManager,
+	    \YageCMS\Core\Domain\Website,
+	    \YageCMS\Core\Domain\Cookie,
+	    \YageCMS\Core\DomainAccess\CookieAccess,
+	    \YageCMS\Core\DomainAccess\UserAccess,
+	    \YageCMS\Core\DomainAccess\UserGroupAccess;
 	
 	class User extends WebsiteDomainObject
 	{
@@ -18,20 +19,108 @@
 		 // ATTRIBUTES
 		//
 		
-		private /*(string)*/ $loginname;
-		private /*(string)*/ $password;
-		private /*(string)*/ $passwordsalt;
-		private /*(int)*/ $lastpasswordchange;
-		private /*(string)*/ $emailaddress;
-		private /*(UserGroup)*/ $usergroup;
+		/**
+		 * @var string
+		 */
+		private $loginname;
+		
+		/**
+		 * @var string
+		 */
+		private $password;
+		
+		/**
+		 * @var string
+		 */
+		private $passwordsalt;
+		
+		/**
+		 * @var int
+		 */
+		private $lastpasswordchange;
+		
+		/**
+		 * @var string
+		 */
+		private $emailaddress;
+		
+		/**
+		 * @var array
+		 */
+		private $usergroups;
 		
 		  //
 		 // METHODS
 		//
 		
+		public function Create()
+		{
+			$result = parent::Create();
+			
+			if(!$result) return false;
+			
+			foreach($this->UserGroups as $group)
+			{
+				$this->AddToUserGroup($group, true);
+			}
+			
+			return true;
+		}
+		
+		public function Modify()
+		{
+			$result = parent::Modify();
+			
+			if(!$result) return false;
+			
+			foreach($this->UserGroups as $group)
+			{
+				$this->AddToUserGroup($group, true);
+			}
+			
+			return true;
+		}
+		
+		/**
+		 * Iterates over all groups of this user and checks if a certain permission is given
+		 * @param string $permission
+		 * @return boolean Whether the permission is given
+		 */
 		public function HasPermission($permission)
 		{
-			return $this->usergroup->HasPermission($permission);
+			foreach($this->UserGroups as $group)
+			{
+				$haspermission = $group->HasPermission($permission);
+				
+				// Stop when finding a group that has this permission
+				if($haspermission) return true;
+			}
+			
+			return false;
+		}
+		
+		/**
+		 * Add the user to a group
+		 * 
+		 * @param \YageCMS\Core\Domain\UserGroup $group
+		 * @param boolean $save Set to true to write this change to the database immediatelly, else it won't be saved unless you call Modify() on this object
+		 */
+		public function AddToUserGroup($group, $save = false)
+		{
+			$this->UserGroups; // Load the original group list
+			
+			// Check if the user is already in this group
+			foreach($this->usergroups as $agroup)
+			{
+				if($group->ID == $agroup->ID) return false;
+			}
+			
+			$this->usergroups[] = $group;
+			
+			if($save)
+			{
+				UserGroupAccess::AddUserToUserGroup($group, $this);
+			}
 		}
 		
 		public function VarDump($html = true)
@@ -41,8 +130,7 @@
 			if($html)
 			{
 				$dump .= "<p><strong>Loginname:</strong> ".$this->Loginname;
-				$dump .= "<br/><strong>Email-Address:</strong> ".$this->EmailAddress;
-				$dump .= "<br/><strong>Group:</strong> ".$this->UserGroup->Name."</p>";
+				$dump .= "<br/><strong>Email-Address:</strong> ".$this->EmailAddress."</p>";
 			}
 			else
 			{
@@ -163,39 +251,56 @@
 			$this->emailaddress = $value;
 		}
 		
-		# UserGroup
+		/*
+		 * User Groups
+		 */
 		
 		/**
-		 * @return \YageCMS\Core\Domain\UserGroup
+		 * @return array
 		 */
-		private function GetUserGroup()
+		private function GetUserGroups()
 		{
-			return $this->usergroup;
-		}
-		
-		/**
-		 * @param \YageCMS\Core\Domain\UserGroup $value
-		 */
-		private function SetUserGroup(UserGroup $value)
-		{
-			$this->usergroup = $value;
+			if($this->IsPersistent && is_null($this->usergroups))
+			{
+				$this->usergroups = array();
+			
+				try
+				{
+					$this->usergroups = UserGroupAccess::Instance()->GetByUser($this);
+				}
+				catch(\Exception $e)
+				{
+					// ignore
+				}
+			}
+				
+			return $this->usergroups;
 		}
 		
 		  //
 		 // VARIABLES
 		//
 		
-		private static /*(User)*/ $current;
+		/**
+		 * @var \YageCMS\Core\Domain\User
+		 */
+		private static $current;
 		
 		  //
 		 // FUNCTIONS
 		//
 		
+		/**
+		 * @return \YageCMS\Core\Domain\User
+		 */
 		public static function GetCurrentUser()
 		{
 			return self::$current;
 		}
 		
+		/**
+		 * @param \YageCMS\Core\Domain\User $value
+		 */
 		public static function SetCurrentUser(User $value)
 		{
 			self::$current = $value;
@@ -250,7 +355,7 @@
 				$newUser->Password = $hashedPassword;
 				$newUser->PasswordSalt = $localSalt;
 				$newUser->EmailAddress = $newUser->Loginname."@guest.com";
-				$newUser->UserGroup = UserGroup::GetGuestUserGroup();
+				$newUSer->AddToUserGroup(UserGroup::GetGuestUserGroup());
 				
 				$newUser->Create();
 				
