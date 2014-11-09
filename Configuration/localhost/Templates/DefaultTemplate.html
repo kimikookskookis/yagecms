@@ -23,11 +23,29 @@
 				</Then>
 				<ElseIf><Template:SectionItemsNumber name="YageCMS.Core.TopBar" /> > 1</ElseIf>
 				<Then>
+					<Template:If>
+						<Condition><Setting name="local:YageCMS.Core.DefaultSetup" /> == "AEF0E3"</Condition>
+						<Then>
+							<p>DefaultSetup = "AEF0E3"</p>
+						</Then>
+						<ElseIf><Setting name="local:YageCMS.Core.DefaultSetup" /> == "FooBar"</ElseIf>
+						<Then>
+							<p>DefaultSetup = "FooBar"</p>
+						</Then>
+						<ElseIf><Setting name="local:YageCMS.Core.DefaultSetup" /> == "HelloWorld"</ElseIf>
+						<Then>
+							<p>DefaultSetup = "HelloWorld"</p>
+						</Then>
+						<Else>
+							<p>DefaultSetup is something else</p>
+						</Else>
+					</Template:If>
+					
 					<Template:Section name="YageCMS.Core.TopBar" />
 				</Then>
 				<Else>
 					<Template:Comment><!-- Display a warning if Topbar-Section is empty --></Template:Comment>
-					<p>Topbar is missing.</p
+					<p>Topbar is missing.</p>
 				</Else>
 			</Template:If>
 			

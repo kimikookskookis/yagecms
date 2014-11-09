@@ -67,14 +67,7 @@
 					$wrapper = $ifblock[0];
 					$block = $ifblock[1];
 					
-					// Wrap the XML with a root node
-					$block = "<IfConditionBlock xmlns:Template=\"http://www.yagecms.com/some/namespace/Template\">".$block."</IfConditionBlock>";
-					
-					// Wrap <Condition>...</Condition>, <Then>...</Then>, <ElseIf>...</ElseIf> and <Else>...</Else> with CDATA
-					$block = preg_replace("/<(Condition|Then|ElseIf|Else)>(.*?)<\/\\1>/Smisu","<$1><![CDATA[$2]]></$1>",$block);
-					
-					$xmlIfBlock = simplexml_load_string($block);
-					var_dump($xmlIfBlock);
+					$output = str_replace($wrapper, self::ParseConditionBlock($block), $output);
 				}
 			}
 			
@@ -106,6 +99,132 @@
 			}
 			
 			$this->plugins[$section]->AddItem($view, $position);
+		}
+		
+		private function ParseConditionBlock($block)
+		{
+			// Wrap the XML with a root node
+			$block = "<IfConditionBlock xmlns:Template=\"http://www.yagecms.com/some/namespace/Template\">".$block."</IfConditionBlock>";
+				
+			// Wrap <Condition>...</Condition>, <Then>...</Then>, <ElseIf>...</ElseIf> and <Else>...</Else> with CDATA
+			$block = preg_replace("/<(Condition|Then|ElseIf|Else)>((?:(?:(?!<\/?\\1).)*|(?R))*)<\/\\1>/Smisu","<$1><![CDATA[$2]]></$1>",$block);
+				
+			$xmlIfBlock = simplexml_load_string($block);
+				
+			$xmlBlocks = $xmlIfBlock->children();
+				
+			$blocks = array();
+				
+			for($index = 0; $index < count($xmlBlocks); $index++)
+			{
+				$xmlBlock = $xmlBlocks[$index];
+				$type = $xmlBlock->getName();
+				if($type == "Condition") $type = "If";
+				
+				if($type == "If" || $type == "ElseIf")
+				{
+					$index++;
+					$xmlBody = $xmlBlocks[$index];
+					
+					$blocks[$type] = array("Condition" => (string)$xmlBlock, "Body" => (string) $xmlBody);
+				}
+				else if($type == "Else")
+				{
+					$blocks["Else"] = array("Condition" => true, "Body" => (string) $xmlBlock);
+				}
+			}
+			
+			foreach($blocks as $block)
+			{
+				$condition = $block["Condition"];
+				$body = $block["Body"];
+				
+				if(self::CheckCondition($condition))
+				{
+					return $body;
+				}
+			}
+		}
+		
+		private function CheckCondition($condition)
+		{
+			//echo "<h1>Checking condition: ".htmlentities($condition)."</h1>";
+			//echo "\n\n";
+			$condition = $this->ParseTags($condition);
+			
+			//echo "<br/>Final Condition: '".htmlentities($condition)."'";
+			echo "<br/>".htmlentities("return (".$condition.");")."<br/>";
+			$result = eval("return (".$condition.");");
+			return $result;
+		}
+		
+		private function ParseTags($body)
+		{
+			$tags = array();
+			$results = preg_match_all("/<(.*)\/>/Smisu",$body,$tags,PREG_SET_ORDER);
+			
+			if($results)
+			{
+				foreach($tags as $tag)
+				{
+					$output = $this->ParseTag($tag[0]);
+					
+					$body = str_replace($tag[0], $output, $body);
+				}
+			}
+			
+			return $body;
+		}
+		
+		private function ParseTag($tag)
+		{
+			//echo "Parsing '".htmlentities($tag)."'<br/>\n\n";
+			
+			$info = array();
+			$tag = preg_match("/<([a-zA-Z]+)(:([a-zA-Z]+)?)(.*)\/>/Smisu",$tag,$info);
+			
+			switch($info[1])
+			{
+				case "Template":
+					
+					$function = $info[3];
+					
+					switch($function)
+					{
+						case "SectionNotEmpty":
+							
+							preg_match("/name=(\"|')([a-zA-Z0-9\._]+)(\\1)/ui",$info[4],$subinfo);
+							$name = $subinfo[2];
+							
+							if(!array_key_exists($name, $this->plugins))
+								return 0;
+							
+							if(!$this->plugins[$name]->HasItems())
+								return 0;
+							
+							return true;
+							
+							break;
+						
+						case "SectionItemsNumber":
+							
+							preg_match("/name=(\"|')([a-zA-Z0-9\._]+)(\\1)/ui",$info[4],$subinfo);
+							$name = $subinfo[2];
+							
+							if(!array_key_exists($name, $this->plugins))
+								return 0;
+								
+							return $this->plgins[$name]->NumberOfItems();
+							
+							break;
+					}
+					
+					break;
+				
+				case "Setting":
+					
+					break;
+			}
 		}
 		
 		  //
