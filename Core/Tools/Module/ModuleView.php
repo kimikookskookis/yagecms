@@ -1,10 +1,11 @@
 <?php
 	namespace YageCMS\Core\Tools\Module;
 	
-	use \YageCMS\Core\Tools\StringTools;
-	use \YageCMS\Core\DomainAccess\ModuleAccess;
-	use \YageCMS\Core\Tools\EventManager;
-	use \YageCMS\Core\Tools\RequestHeader;
+	use \YageCMS\Core\Tools\StringTools,
+	    \YageCMS\Core\DomainAccess\ModuleAccess,
+	    \YageCMS\Core\Tools\EventManager,
+	    \YageCMS\Core\Tools\RequestHeader,
+	    \YageCMS\Core\Tools\Module\View;
 	
 	class ModuleView extends View
 	{
@@ -14,6 +15,15 @@
 		//
 		
 		private static /*(ModuleView)*/ $current;
+		
+		  //
+		 // METHODS
+		//
+		
+		public function GetSortableListKey()
+		{
+			return "YageCMS.Core.ModuleView";
+		}
 		
 		  //
 		 // FUNCTIONS

@@ -31,6 +31,9 @@
 		
 		public function GetParameter($name, $namespace = "local")
 		{
+			if(!array_key_exists($namespace, $this->parameters))
+				return null;
+			
 			if(!array_key_exists($name, $this->parameters[$namespace]))
 				return null;
 			

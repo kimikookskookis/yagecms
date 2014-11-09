@@ -1,12 +1,13 @@
 <?php
 	namespace YageCMS\Core\Tools\Module;
 	
-	use \YageCMS\Core\Tools\StringTools;
-	use \YageCMS\Core\DomainAccess\ModuleAccess;
-	use \YageCMS\Core\Tools\EventManager;
-	use \YageCMS\Core\Tools\RequestHeader;
+	use \YageCMS\Core\Tools\StringTools,
+	    \YageCMS\Core\DomainAccess\ModuleAccess,
+	    \YageCMS\Core\Tools\EventManager,
+	    \YageCMS\Core\Tools\RequestHeader,
+		\YageCMS\Core\Tools\SortableListItem;
 	
-	class View
+	abstract class View implements SortableListItem
 	{
 		  //
 		 // ATTRIBUTES

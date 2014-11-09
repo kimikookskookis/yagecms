@@ -85,11 +85,8 @@
 				
 				$code = str_replace($wrapper, "<!--SECTION:".$name."-->",$code);
 			}
-		}
-		
-		public function AddToBlock(View $view)
-		{
 			
+			$this->code = $code;
 		}
 		
 		public function VarDump($html = true)
@@ -110,10 +107,10 @@
 				}
 				
 				$dump .= "<p><strong>Name:</strong> ".$this->Name;
-				$dump .= "<br/><strong>Title:</strong> ".$this->Title;
 				$dump .= "<br/><strong>Type:</strong> ".$this->Type;
 				$dump .= "<br/><strong>Location:</strong> ".$this->Location;
-				$dump .= "<br/><strong>Code:</strong> <pre><code>".$code."</code></pre></p>";
+				$dump .= "<br/><strong>Code:</strong> <pre><code>".$code."</code></pre>";
+				$dump .= "<br/><strong>Sections:</strong> ".implode(", ",$this->sections)."</p>";
 			}
 			else
 			{
@@ -143,24 +140,6 @@
 		private function SetName($value)
 		{
 			$this->name = $value;
-		}
-		
-		# Title
-		
-		/**
-		 * @return string/null
-		 */
-		private function GetTitle()
-		{
-			return $this->title;
-		}
-		
-		/**
-		 * @param string $value
-		 */
-		private function SetTitle($value)
-		{
-			$this->title = $value;
 		}
 		
 		# Type
@@ -234,6 +213,14 @@
 		private function SetLocation($value)
 		{
 			$this->location = $value;
+		}
+		
+		/**
+		 * @return array
+		 */
+		private function GetSections()
+		{
+			return $this->sections;
 		}
 		
 		  //
