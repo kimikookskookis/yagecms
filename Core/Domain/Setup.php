@@ -33,7 +33,8 @@
 		 */
 		public function CreateOutput()
 		{
-			echo $this->template->VarDump(true);
+			#echo $this->template->VarDump(true);
+			$this->template->Analyze();
 			return "Setup::CreateOutput";
 		}
 		

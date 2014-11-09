@@ -1,10 +1,48 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
-</head>
-<body>
-	<p>Lorem ipsum</p>
-</body>
+	<head>
+		<meta charset="UTF-8">
+		
+		<title><Template:ModuleViewTitle /> &bull; <Template:Setting name="YageCMS.Core.Title" /></title>
+	</head>
+	<body>
+		<header>
+			<div id="logo"><a href="<Template:Setting name="YageCMS.Core.PublicRoot" />"><img src="<Template:Setting name="YageCMS.Core.PublicRoot" />Images/logo.png" /></a></div>
+			<div id="rightHeader"><Template:Section name="Header.Right">Right Header</Template:Section></div>
+		</header>
+		
+		<nav>
+			<Template:Section name="YageCMS.Core.MainMenuBar" />
+		</nav>
+		
+		<main>
+			<Template:If>
+				<Condition><Template:SectionNotEmpty name="YageCMS.Core.TopBar" /></Condition>
+				<Then>
+					<div id="TopBar"><Template:Section name="YageCMS.Core.TopBar" /></div>
+				</Then>
+				<ElseIf><Template:SectionItemsNumber name="YageCMS.Core.TopBar" /> > 1</ElseIf>
+				<Then>
+					<Template:Section name="YageCMS.Core.TopBar" />
+				</Then>
+				<Else>
+					<Template:Comment><!-- Display a warning if Topbar-Section is empty --></Template:Comment>
+					<p>Topbar is missing.</p
+				</Else>
+			</Template:If>
+			
+			<Template:Section name="YageCMS.Core.ModuleView">
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id dapibus tellus. In vestibulum tempus purus et viverra. Proin tempor, est ac ultrices convallis, tortor justo placerat mauris, ut convallis est erat in erat. Nulla semper diam sit amet faucibus rutrum. Fusce id egestas leo. Vestibulum ut sollicitudin lorem. Donec egestas a ligula ac vestibulum.</p>
+				<p>Cras non pharetra lorem. Integer aliquam nunc ac elit efficitur, vitae molestie tellus efficitur. Donec pretium felis eros, id ornare lacus maximus nec. In hac habitasse platea dictumst. Suspendisse at fermentum velit. Sed blandit, enim ut tempus finibus, lacus nibh ornare risus, congue rhoncus ante libero at tellus. Nulla semper condimentum nisl, vitae porta est mollis et. Nullam vitae finibus neque. Nullam ac feugiat leo, auctor auctor tortor. Vestibulum mattis at velit sed cursus. Duis nulla nunc, feugiat vitae pellentesque eget, ultrices vitae ligula. Morbi id ultricies mauris. Donec a tortor quis dui condimentum egestas in vitae velit. Ut molestie purus est, quis feugiat nibh tempus a.</p>
+				<p>In ante mi, finibus nec ullamcorper non, blandit ut felis. Donec venenatis, ipsum nec aliquet porttitor, mi felis elementum turpis, ut convallis lorem massa a velit. Donec non pulvinar erat, nec vehicula dui. Sed tristique cursus ante eu lacinia. Nam ut eros vulputate, luctus velit at, pharetra nisi. Proin vehicula ac mauris vitae tempus. Pellentesque eros purus, molestie in lacus in, aliquet placerat erat. Donec malesuada sem risus, ac sagittis sapien tincidunt eu. Maecenas fringilla, justo sed pharetra porttitor, ligula tellus imperdiet velit, vel gravida quam ligula vel sem. Donec eget metus sit amet metus lobortis laoreet. Ut ut lacus et lacus imperdiet auctor. Nunc mattis tortor venenatis, porttitor risus mattis, lobortis sem. Suspendisse tincidunt commodo purus vitae ullamcorper. Aliquam ultrices semper erat, vitae facilisis elit facilisis vel.</p>
+			</Template:Section>
+		</main>
+		
+		<footer>
+			<div id="footer1"><Template:Section name="Footer1">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id dapibus tellus. In vestibulum tempus purus et viverra. Proin tempor, est ac ultrices convallis, tortor justo placerat mauris, ut convallis est erat in erat.</Template:Section></div>
+			<div id="footer2"><Template:Section name="Footer2">Cras non pharetra lorem. Integer aliquam nunc ac elit efficitur, vitae molestie tellus efficitur. Donec pretium felis eros, id ornare lacus maximus nec. In hac habitasse platea dictumst. Suspendisse at fermentum velit.</Template:Section></div>
+			<div id="footer3"><Template:Section name="Footer3">Sed blandit, enim ut tempus finibus, lacus nibh ornare risus, congue rhoncus ante libero at tellus. Nulla semper condimentum nisl, vitae porta est mollis et. Nullam vitae finibus neque.</Template:Section></div>
+			<div id="footer4"><Template:Section name="Footer4">Nullam ac feugiat leo, auctor auctor tortor. Vestibulum mattis at velit sed cursus. Duis nulla nunc, feugiat vitae pellentesque eget, ultrices vitae ligula. Morbi id ultricies mauris. Donec a tortor quis dui condimentum egestas in vitae velit.</Template:Section></div>
+		</footer>
+	</body>
 </html>

@@ -12,16 +12,80 @@
 		 // ATTRIBUTES
 		//
 		
-		private /*(string)*/ $name;
-		private /*(string)*/ $title;
-		private /*(string)*/ $type;
+		/**
+		 * @var string
+		 */
+		private $name;
 		
-		private /*(string)*/ $code;
-		private /*(string)*/ $location;
+		/**
+		 * @var string
+		 */
+		private $type;
+		
+		/**
+		 * @var string
+		 */
+		private $code;
+		
+		/**
+		 * @var string
+		 */
+		private $location;
+		
+		/**
+		 * @var array
+		 */
+		private $sections;
 		
 		  //
 		 // METHODS
 		//
+		
+		public function Analyze()
+		{
+			$code = $this->Code;
+			$this->sections = array();
+			
+			if(is_null($code))
+			{
+				return false;
+			}
+			
+			/* 
+			 * Remove all <Template:Comment />-Blocks
+			 */
+			
+			$comments = array();
+			$results = preg_match_all("{<Template:Comment>(.+)</Template:Comment>}miu",$code,$comments,PREG_SET_ORDER);
+			
+			if($results)
+			{
+				foreach($comments as $comment)
+				{
+					$code = str_replace($comment[0],null,$code);
+				}
+			}
+			
+			/*
+			 * Find and prepare all Sections
+			 */
+			
+			$sections = array();
+			$results = preg_match_all("/<Template:Section name=(\"|')([a-zA-Z0-9\._]+)(\"|')( \/>|>(.*?)<\/Template:Section>)/Smisu",$code,$sections,PREG_SET_ORDER);
+			
+			foreach($sections as $section)
+			{
+				$wrapper = $section[0];
+				$name = $section[2];
+				
+				if(!in_array($name, $this->sections))
+				{
+					$this->sections[] = $name;
+				}
+				
+				$code = str_replace($wrapper, "<!--SECTION:".$name."-->",$code);
+			}
+		}
 		
 		public function AddToBlock(View $view)
 		{
@@ -49,7 +113,7 @@
 				$dump .= "<br/><strong>Title:</strong> ".$this->Title;
 				$dump .= "<br/><strong>Type:</strong> ".$this->Type;
 				$dump .= "<br/><strong>Location:</strong> ".$this->Location;
-				$dump .= "<br/><strong>Code:</strong> ".$code."</p>";
+				$dump .= "<br/><strong>Code:</strong> <pre><code>".$code."</code></pre></p>";
 			}
 			else
 			{
