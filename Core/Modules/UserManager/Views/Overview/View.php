@@ -19,8 +19,7 @@
 			 * 4. View assigns itself to the setup as YageCMS.Core.ModuleView
 			 * 5. Parse template
 			 */
-			/*
-			$template = Template::LoadTemplate("YageCMS.Core.Module.UserManager.Overview.Overview","VIEW");
+			/*$template = Template::LoadTemplate("YageCMS.Core.Module.UserManager.Overview.Overview","VIEW");
 			print $template->VarDump(true);
 			return "Hi";*/
 			
@@ -35,7 +34,9 @@
 			
 			$setup->AddToSection("YageCMS.Core.ModuleView", $this);
 			
-			return $setup->CreateOutput();
+			$output = $this->LoadSetup();
+			
+			return $output;
 		}
 	}
 ?>

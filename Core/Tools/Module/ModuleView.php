@@ -7,7 +7,7 @@
 	    \YageCMS\Core\Tools\RequestHeader,
 	    \YageCMS\Core\Tools\Module\View;
 	
-	class ModuleView extends View
+	abstract class ModuleView extends View
 	{
 		
 		  //
@@ -23,6 +23,33 @@
 		public function GetSortableListKey()
 		{
 			return "YageCMS.Core.ModuleView";
+		}
+		
+		public function LoadSetup()
+		{
+			// Qualified name of setting for setup
+			$settingName = "Views.".$this->GetViewName().".Setup";
+			$scope = "module-".$this->GetModuleName();
+			
+			
+		}
+		
+		public function GetViewName()
+		{
+			$class = explode("\\",get_called_class());
+			
+			$view = $class[4];
+			
+			return $view;
+		}
+		
+		public function GetModuleName()
+		{
+			$class = explode("\\",get_called_class());
+			
+			$module = $class[2];
+			
+			return $module;
 		}
 		
 		  //
