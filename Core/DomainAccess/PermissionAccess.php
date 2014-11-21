@@ -51,7 +51,7 @@
 		
 		public function GetByUserGroup(UserGroup $value)
 		{
-			$sqlQuery = "SELECT * FROM permission WHERE usergroup = :value AND website = :website AND deleted IS NULL";
+			$sqlQuery = "SELECT * FROM permission WHERE usergroup = :value AND website = :website AND deleted = '9999-12-31 23:59:59'";
 			$parameters = array("value" => $value, "website" => Website::GetCurrentWebsite());
 			
 			$result = Access::Instance()->Read($sqlQuery, $parameters);

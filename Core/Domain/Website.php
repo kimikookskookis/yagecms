@@ -14,6 +14,16 @@
 		private /*(string)*/ $hostname;
 		
 		  //
+		 // CONSTRUCTOR
+		//
+		
+		public function __construct()
+		{
+			parent::__construct();
+			
+			$this->hostname = "localhost";
+		}
+		  //
 		 // METHODS
 		//
 		

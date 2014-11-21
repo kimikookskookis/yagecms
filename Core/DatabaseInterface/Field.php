@@ -1,6 +1,8 @@
 <?php
 	namespace YageCMS\Core\DatabaseInterface;
 	
+	use \DateTime;
+	
 	class Field
 	{
 		  //
@@ -33,6 +35,7 @@
 				case "Boolean": return $this->GetBoolean();
 				case "Generic": return $this->GetGeneric();
 				case "Timestamp": return $this->GetTimestamp();
+				case "DateTime": return $this->GetDateTime();
 			}
 		}
 		
@@ -80,6 +83,11 @@
 		private function GetTimestamp()
 		{
 			return (int) strtotime($this->GetString());
+		}
+		
+		private function GetDateTime()
+		{
+			return new DateTime($this->GetString());
 		}
 	}
 ?>

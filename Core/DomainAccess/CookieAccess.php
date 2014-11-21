@@ -49,7 +49,7 @@
 		
 		public function GetByIdentifier($value)
 		{
-			$sqlQuery = "SELECT * FROM cookie WHERE identifier = :value AND website = :website AND deleted IS NULL";
+			$sqlQuery = "SELECT * FROM cookie WHERE identifier = :value AND website = :website AND deleted = '9999-12-31 23:59:59'";
 			$result = Access::Instance()->Read($sqlQuery, array("value" => $value, "website" => Website::GetCurrentWebsite()));
 			
 			if(!$result || !$result->HasRecords)
@@ -88,7 +88,7 @@
 				return $fromCache;
 			}
 			
-			$sqlQuery = "SELECT * FROM cookie WHERE identifier = :identifier AND name = :name AND website = :website AND deleted IS NULL";
+			$sqlQuery = "SELECT * FROM cookie WHERE identifier = :identifier AND name = :name AND website = :website AND deleted = '9999-12-31 23:59:59'";
 			$result = Access::Instance()->ReadSingle($sqlQuery, array("identifier" => $identifier, "name" => $name, "website" => Website::GetCurrentWebsite()));
 			
 			if(!$result)

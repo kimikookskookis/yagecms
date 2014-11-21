@@ -8,7 +8,8 @@
 	    \YageCMS\Core\Tools\StringTools,
 	    \YageCMS\Core\DomainAccess\DomainObjectAccess,
 	    \YageCMS\Core\Tools\FunctionCheck,
-	    \YageCMS\Core\Exception\ValueCannotBeNullException;
+	    \YageCMS\Core\Exception\ValueCannotBeNullException,
+	    \DateTime;
 	
 	/**
 	 * This is the base class for all Domain Classes
@@ -24,14 +25,14 @@
 		//
 		
 		/**
-		 * The ID of the Domain (a GUID)
-		 * @var string
+		 * The ID of the Domain
+		 * @var int
 		 */
 		private $id;
 		
 		/**
 		 * A timestamp of when the object has been saved to the database
-		 * @var integer
+		 * @var DateTime
 		 */
 		private $created;
 		
@@ -43,7 +44,7 @@
 		
 		/**
 		 * A timestamp of when the object has last been modified
-		 * @var integer
+		 * @var DateTime
 		 */
 		private $modified;
 		
@@ -55,13 +56,13 @@
 		
 		/**
 		 * A timestamp of when the object has been deleted
-		 * @var integer
+		 * @var DateTime
 		 */
 		private $deleted;
 		
 		/**
 		 * A reference to the user which deleted the object
-		 * @var User
+		 * @var User/null
 		 */
 		private $deletedby;
 		
@@ -89,6 +90,13 @@
 		 */
 		public function __construct()
 		{
+			$this->created = new DateTime();
+			$this->createdby = User::GetCurrentUser();
+			$this->modified = new DateTime();
+			$this->modifiedby = User::GetCurrentUser();
+			$this->deleted = new DateTime("9999-12-31 23:59:59");
+			$this->deletedby = null;
+			
 			$this->stored = false;
 			$this->changedfields = array();
 		}
@@ -109,10 +117,10 @@
 		 */
 		public function Create()
 		{
-			$this->ID = StringTools::GenerateGUID();
-			$this->Created = time();
+			$this->ID = null;
+			$this->Created = new DateTime();
 			$this->CreatedBy = User::GetCurrentUser();
-			$this->Modified = time();
+			$this->Modified = new DateTime();
 			$this->ModifiedBy = User::GetCurrentUser();
 			
 			$type = strtolower($this->GetType());
@@ -133,7 +141,7 @@
 		 */
 		public function Modify()
 		{
-			$this->modified = time();
+			$this->modified = new DateTime();
 			$this->modifiedby = User::GetCurrentUser();
 			
 			$connection = DatabaseConnection::GetConnection("default");
@@ -152,7 +160,7 @@
 		 */
 		public function Delete()
 		{
-			$this->deleted = time();
+			$this->deleted = new DateTime();
 			$this->deletedby = User::GetCurrentUser();
 			
 			$connection = DatabaseConnection::GetConnection("default");
@@ -238,11 +246,11 @@
 		 * @version 1.0
 		 * @since 1.0
 		 * 
-		 * @return string The ID
+		 * @return int The ID
 		 */
 		public function __tostring()
 		{
-			return $this->ID;
+			return (string) $this->ID;
 		}
 		
 		  //
@@ -258,7 +266,7 @@
 		 * @version 1.0
 		 * @since 1.0
 		 * 
-		 * @return string/null
+		 * @return integer/null
 		 */
 		private function GetID()
 		{
@@ -272,7 +280,7 @@
 		 * @version 1.0
 		 * @since 1.0
 		 * 
-		 * @param string $value
+		 * @param integer $value
 		 */
 		private function SetID($value)
 		{
@@ -288,11 +296,11 @@
 		 * @version 1.0
 		 * @since 1.0
 		 * 
-		 * @return string Y-m-d H:i:s of the timestamp
+		 * @return DateTime
 		 */
 		private function GetCreated()
 		{
-			return date("Y-m-d H:i:s",$this->created);
+			return $this->created;
 		}
 		
 		/**
@@ -302,13 +310,10 @@
 		 * @version 1.0
 		 * @since 1.0
 		 * 
-		 * @param string/int $value
+		 * @param DateTime $value
 		 */
-		private function SetCreated($value)
+		private function SetCreated(\DateTime $value)
 		{
-			if(!is_int($value))
-				$value = strtotime($value);
-			
 			$this->created = $value;
 		}
 		
@@ -345,11 +350,11 @@
 		 * @version 1.0
 		 * @since 1.0
 		 * 
-		 * @return string Y-m-d H:i:s of the timestamp
+		 * @return DateTime
 		 */
 		private function GetModified()
 		{
-			return date("Y-m-d H:i:s",$this->modified);
+			return $this->modified;
 		}
 		
 		/**
@@ -359,13 +364,10 @@
 		 * @version 1.0
 		 * @since 1.0
 		 * 
-		 * @param string/int $value
+		 * @param DateTime $value
 		 */
-		private function SetModified($value)
+		private function SetModified(\DateTime $value)
 		{
-			if(!is_int($value))
-				$value = strtotime($value);
-			
 			$this->modified = $value;
 		}
 		
@@ -402,11 +404,11 @@
 		 * @version 1.0
 		 * @since 1.0
 		 * 
-		 * @return string/null Y-m-d H:i:s of the timestamp (or NULL if the object is not deleted)
+		 * @return DateTime
 		 */
 		private function GetDeleted()
 		{
-			return (!is_null($this->deleted) ? date("Y-m-d H:i:s",$this->deleted) : null);
+			return $this->deleted;
 		}
 		
 		/**
@@ -416,13 +418,10 @@
 		 * @version 1.0
 		 * @since 1.0
 		 * 
-		 * @param string/int/null $value
+		 * @param DateTime $value
 		 */
-		private function SetDeleted($value)
+		private function SetDeleted(\DateTime $value)
 		{
-			if(!is_int($value) && !is_null($value))
-				$value = strtotime($value);
-			
 			$this->deleted = $value;
 		}
 		
@@ -431,7 +430,9 @@
 		 */
 		private function GetIsDeleted()
 		{
-			return ($this->deleted ? true : false);
+			$isDeleted = ($this->deleted->format("Y-m-d H:i:s") == "9999-12-31 23:59:59" ? true : false);
+			
+			return $isDeleted;
 		}
 		
 		# DeletedBy

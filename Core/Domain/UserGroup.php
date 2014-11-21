@@ -92,7 +92,7 @@
 		
 		public static function GetGuestUserGroup()
 		{
-			$groupid = ConfigurationManager::Instance()->GetParameter("GuestUserGroup");
+			$groupid = ConfigurationManager::Instance()->GetParameter("YageCMS.Core.GuestUserGroup");
 			
 			$group = UserGroupAccess::Instance()->GetByID($groupid);
 			

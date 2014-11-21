@@ -11,7 +11,8 @@
 	    \YageCMS\Core\Domain\Cookie,
 	    \YageCMS\Core\DomainAccess\CookieAccess,
 	    \YageCMS\Core\DomainAccess\UserAccess,
-	    \YageCMS\Core\DomainAccess\UserGroupAccess;
+	    \YageCMS\Core\DomainAccess\UserGroupAccess,
+		\DateTime;
 	
 	class User extends WebsiteDomainObject
 	{
@@ -47,7 +48,16 @@
 		/**
 		 * @var array
 		 */
-		private $usergroups;
+		private $usergroups = array();
+		
+		  //
+		 // CONSTRUCTOR
+		//
+		
+		public function __construct()
+		{
+			$this->LastPasswordChange = new DateTime();
+		}
 		
 		  //
 		 // METHODS
@@ -215,21 +225,18 @@
 		# LastPasswordChange
 		
 		/**
-		 * @return string
+		 * @return DateTime
 		 */
 		private function GetLastPasswordChange()
 		{
-			return date("Y-m-d H:i:s",$this->lastpasswordchange);
+			return $this->lastpasswordchange;
 		}
 		
 		/**
-		 * @param string/int $value
+		 * @param DateTime $value
 		 */
 		private function SetLastPasswordChange($value)
 		{
-			if(!is_int($value))
-				$value = strtotime($value);
-			
 			$this->lastpasswordchange = $value;
 		}
 		
@@ -295,6 +302,11 @@
 		 */
 		public static function GetCurrentUser()
 		{
+			/*if(is_null(self::$current))
+			{
+				self::$current = UserAccess::Instance()->GetByID(1);
+			}*/
+			
 			return self::$current;
 		}
 		
@@ -355,7 +367,7 @@
 				$newUser->Password = $hashedPassword;
 				$newUser->PasswordSalt = $localSalt;
 				$newUser->EmailAddress = $newUser->Loginname."@guest.com";
-				$newUSer->AddToUserGroup(UserGroup::GetGuestUserGroup());
+				$newUser->AddToUserGroup(UserGroup::GetGuestUserGroup());
 				
 				$newUser->Create();
 				

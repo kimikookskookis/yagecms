@@ -31,7 +31,6 @@
 		public function Create($type, $values)
 		{
 			$sqlQuery = "INSERT INTO ".$type." (".implode(", ",array_keys($values)).") VALUES (:".implode(", :",array_keys($values)).")";
-			
 			$result = Access::Instance()->Execute($sqlQuery, $values);
 			
 			return $result;
@@ -84,12 +83,12 @@
 		
 		public function ConvertRecordToObject(Record $record, DomainObject $object)
 		{
-			$id = $record->id->String;
-			$created = $record->created->Timestamp;
+			$id = $record->id->Integer;
+			$created = $record->created->DateTime;
 			$createdby = (!$record->createdby->IsNull ? $record->createdby->String : null);
-			$modified = $record->modified->Timestamp;
+			$modified = $record->modified->DateTime;
 			$modifiedby = (!$record->modifiedby->IsNull ? $record->modifiedby->String : null);
-			$deleted = (!$record->deleted->IsNull ? $record->deleted->Timestamp : null);
+			$deleted = $record->deleted->DateTime;
 			$deletedby = (!$record->deletedby->IsNull ? $record->deletedby->String : null);
 			
 			$object->ID = $id;

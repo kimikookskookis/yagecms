@@ -94,6 +94,8 @@
 			$this->timestamp = microtime(true);
 			
 			$this->code = strtoupper(substr(md5($this->timestamp.$message.$type),0,6));
+			
+			#var_dump($this->code.': '.$message);
 		}
 		
 		  //

@@ -50,7 +50,7 @@
 		
 		public function GetByURIHandler(URIHandler $value)
 		{
-			$sqlQuery = "SELECT * FROM urihandlerparameter WHERE urihandler = :value AND website = :website AND deleted IS NULL";
+			$sqlQuery = "SELECT * FROM urihandlerparameter WHERE urihandler = :value AND website = :website AND deleted = '9999-12-31 23:59:59'";
 			$parameters = array("value" => $value, "website" => Website::GetCurrentWebsite());
 			
 			$result = Access::Instance()->Read($sqlQuery, $parameters);

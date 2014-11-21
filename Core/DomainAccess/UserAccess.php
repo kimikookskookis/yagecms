@@ -51,7 +51,7 @@
 			$loginname = $record->loginname->String;
 			$password = $record->password->String;
 			$passwordsalt = $record->passwordsalt->String;
-			$lastpasswordchange = $record->lastpasswordchange->Timestamp;
+			$lastpasswordchange = $record->lastpasswordchange->DateTime;
 			$emailaddress = $record->emailaddress->String;
 			
 			$object->Loginname = $loginname;

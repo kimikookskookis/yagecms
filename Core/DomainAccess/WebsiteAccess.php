@@ -1,10 +1,11 @@
 <?php
 	namespace YageCMS\Core\DomainAccess;
 	
-	use YageCMS\Core\Domain\Website;
-	use YageCMS\Core\Domain\DomainObject;
-	use YageCMS\Core\DatabaseInterface\Access;
-	use YageCMS\Core\DatabaseInterface\Record;
+	use YageCMS\Core\Domain\Website,
+	    YageCMS\Core\Domain\DomainObject,
+	    YageCMS\Core\DatabaseInterface\Access,
+	    YageCMS\Core\DatabaseInterface\Record,
+	    YageCMS\Core\Exception\WebsiteNotFoundException;
 	
 	class WebsiteAccess
 	{
@@ -54,7 +55,7 @@
 				return $fromCache;
 			}
 			
-			$sqlQuery = "SELECT * FROM website WHERE hostname = :value AND deleted IS NULL";
+			$sqlQuery = "SELECT * FROM website WHERE hostname = :value AND deleted = '9999-12-31 23:59:59'";
 			$result = Access::Instance()->ReadSingle($sqlQuery, array("value" => $value));
 			
 			if(!$result)

@@ -20,7 +20,7 @@
 		
 		public function __construct()
 		{
-			$this->website = Website::GetCurrentWebsite();
+			//$this->website = Website::GetCurrentWebsite();
 			
 			parent::__construct();
 		}
@@ -31,7 +31,10 @@
 		
 		public function Create()
 		{
-			$this->Website = Website::GetCurrentWebsite();
+			if(is_null($this->website))
+			{
+				$this->Website = Website::GetCurrentWebsite();
+			}
 			parent::Create();
 		}
 		

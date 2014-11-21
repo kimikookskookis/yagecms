@@ -124,6 +124,10 @@
 				{
 					//ignore
 				}
+				/*catch(\Exception $e)
+				{
+					var_dump($e);
+				}*/
 				
 				if(count($parameters))
 				{
@@ -161,6 +165,10 @@
 					catch(NoConfigurationParametersFoundByScopevalueException $e)
 					{
 						//ignore
+					}
+					catch(\Exception $e)
+					{
+						var_dump($e);
 					}
 					
 					if(count($parameters))

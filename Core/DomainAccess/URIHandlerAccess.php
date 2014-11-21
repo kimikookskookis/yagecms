@@ -5,7 +5,7 @@
 	use \YageCMS\Core\Domain\DomainObject;
 	use \YageCMS\Core\DatabaseInterface\Access;
 	use \YageCMS\Core\DatabaseInterface\Record;
-	use \YageCMS\Core\Exception\NoConfigurationParametersFoundByScopevalueException;
+	use \YageCMS\Core\Exception\NoURIHandlersFoundException;
 	use \YageCMS\Core\Tools\LogManager;
 	use \YageCMS\Core\Domain\Website;
 	
@@ -49,7 +49,7 @@
 		
 		public function GetAll()
 		{
-			$sqlQuery = "SELECT * FROM urihandler WHERE website = :website AND deleted IS NULL";
+			$sqlQuery = "SELECT * FROM urihandler WHERE website = :website AND deleted = '9999-12-31 23:59:59'";
 			$parameters = array("website" => Website::GetCurrentWebsite());
 			
 			$result = Access::Instance()->Read($sqlQuery, $parameters);

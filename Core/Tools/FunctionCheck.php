@@ -4,7 +4,8 @@
 	use \YageCMS\Core\Exception\NoPHPDocCommentFoundForMethodOrFunctionException,
 	    \YageCMS\Core\Exception\MethodDoesNotExistException,
 	    \YageCMS\Core\Exception\ValueCannotBeNullException,
-	    \YageCMS\Core\Exception\NoReturnTypeDeclaredException;
+	    \YageCMS\Core\Exception\NoReturnTypeDeclaredException,
+	    \YageCMS\Core\Exception\VariableTypeMismatchException;
 	
 	/**
 	 * Some methods to validate function input and output
@@ -381,7 +382,7 @@
 				{
 					if($realType <> $allowedType)
 					{
-						throw new VariableTypeMismatchException();
+						throw new VariableTypeMismatchException('Variable Typoe Mismatch. '.$allowedType.' expected, '.$realType.' given');
 					}
 					else
 					{

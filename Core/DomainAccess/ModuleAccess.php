@@ -55,7 +55,7 @@
 				return $fromCache;
 			}
 			
-			$sqlQuery = "SELECT * FROM module WHERE name = :value AND website = :website AND deleted IS NULL";
+			$sqlQuery = "SELECT * FROM module WHERE name = :value AND website = :website AND deleted = '9999-12-31 23:59:59'";
 			$result = Access::Instance()->ReadSingle($sqlQuery, array("value" => $value, "Website" => Website::GetCurrentWebsite()));
 			
 			if(!$result)

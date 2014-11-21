@@ -102,7 +102,7 @@
 			{
 				$priority = 10;
 				
-				$sqlPriority = "SELECT MAX(priority) AS priority FROM usergroupitem WHERE usergroup = :usergroup AND user = :user AND deleted IS NULL";
+				$sqlPriority = "SELECT MAX(priority) AS priority FROM usergroupitem WHERE usergroup = :usergroup AND user = :user AND deleted = '9999-12-31 23:59:59'";
 				$parameters = array("usergroup" => $usergroup, "user" => $user);
 				
 				$result = Access::Instance()->ReadSingle($sqlPriority, $parameters);

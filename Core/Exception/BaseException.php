@@ -44,4 +44,11 @@
 	class MethodDoesNotExistException extends BaseException {}
 	class ValueCannotBeNullException extends BaseException {}
 	class NoReturnTypeDeclaredException extends BaseException {}
+	class VariableTypeMismatchException extends BaseException {}
+	
+	/*
+	 * Website Object
+	 */
+	
+	class WebsiteNotFoundException extends BaseException {}
 ?>

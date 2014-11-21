@@ -78,6 +78,11 @@
 						$value = $value->ID;
 						$datatype = \PDO::PARAM_STR;
 					}
+					else if($value instanceof \DateTime)
+					{
+						$value = $value->format("Y-m-d H:i:s");
+						$datatype = \PDO::PARAM_STR;
+					}
 					else
 					{
 						$value = (string) $value;

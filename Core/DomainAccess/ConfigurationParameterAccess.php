@@ -36,7 +36,7 @@
 			if(!$result)
 			{
 				$logcode = LogManager::_("Configuration Parameter with ID '".$value."' not found");
-				throw new UserNotFoundException($logcode);
+				throw new ConfigurationParameterNotFoundException($logcode);
 			}
 			
 			$object = new ConfigurationParameter;
@@ -49,7 +49,7 @@
 		
 		public function GetByScope($value)
 		{
-			$sqlQuery = "SELECT * FROM configurationparameter WHERE scope = :value AND website = :website AND deleted IS NULL";
+			$sqlQuery = "SELECT * FROM configurationparameter WHERE scope = :value AND website = :website AND deleted = '9999-12-31 23:59:59'";
 			$parameters = array("value" => $value, "website" => Website::GetCurrentWebsite());
 			
 			$result = Access::Instance()->Read($sqlQuery, $parameters);
@@ -68,7 +68,7 @@
 				
 				$object = new ConfigurationParameter;
 				
-				$id = $record->id->String;
+				$id = $record->id->Integer;
 				DomainObjectAccess::Instance()->AddToCache("ByID", $id, $object);
 				
 				$this->ConvertRecordToObject($record, $object);
@@ -80,7 +80,7 @@
 		
 		public function GetByScopeValue($scope, $scopevalue)
 		{
-			$sqlQuery = "SELECT * FROM configurationparameter WHERE scope = :scopevalue AND scopevalue = :scopevalue AND website = :website AND deleted IS NULL";
+			$sqlQuery = "SELECT * FROM configurationparameter WHERE scope = :scopevalue AND scopevalue = :scopevalue AND website = :website AND deleted = '9999-12-31 23:59:59'";
 			$result = Access::Instance()->Read($sqlQuery, array("scope" => $scope, "scopevalue" => $scopevalue, "website" => Website::GetCurrentWebsite()));
 			
 			if(!$result || !$result->HasRecords)
