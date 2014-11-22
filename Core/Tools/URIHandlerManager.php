@@ -1,10 +1,12 @@
 <?php
 	namespace YageCMS\Core\Tools;
 	
-	use \YageCMS\Core\Tools\ConfigurationManager;
-	use \YageCMS\Core\Domain\URIHandlerParameter;
-	use \YageCMS\Core\Domain\URIHandler;
-	use \YageCMS\Core\DomainAccess\URIHandlerAccess;
+	use \YageCMS\Core\Tools\ConfigurationManager,
+	    \YageCMS\Core\Domain\URIHandlerParameter,
+	    \YageCMS\Core\Domain\URIHandler,
+	    \YageCMS\Core\DomainAccess\URIHandlerAccess,
+	    \YageCMS\Core\Exception\NoURIHandlersFoundException,
+	    \YageCMS\Core\Exception\NoURIHandlerFoundForPatternException;
 	
 	class URIHandlerManager
 	{
@@ -225,7 +227,7 @@
 				}
 			}
 			
-			return null;
+			throw new NoURIHandlerFoundForPatternException($method." ".$uri);
 		}
 		
 		  //

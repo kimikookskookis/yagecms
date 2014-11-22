@@ -2,6 +2,7 @@
 	namespace YageCMS\Core\Tools\Module;
 	
 	use \YageCMS\Core\Tools\StringTools,
+	    \YageCMS\Core\Tools\ConfigurationManager,
 	    \YageCMS\Core\DomainAccess\ModuleAccess,
 	    \YageCMS\Core\Tools\EventManager,
 	    \YageCMS\Core\Tools\RequestHeader,
@@ -27,11 +28,14 @@
 		
 		public function LoadSetup()
 		{
+			
 			// Qualified name of setting for setup
 			$settingName = "Views.".$this->GetViewName().".Setup";
-			$scope = "module-".$this->GetModuleName();
+			$scope = "Module:".$this->GetModuleName();
 			
+			$setupName = ConfigurationManager::Instance()->GetParameter($settingName, $scope);
 			
+			var_dump($setupName);
 		}
 		
 		public function GetViewName()
@@ -80,7 +84,7 @@
 			$action = StringTools::CamelCase($action);
 			$httpMethod = RequestHeader::Instance()->RequestMethod;
 			
-			$class = "\\YageCMS\\Modules\\".$module."\\Views\\".$view."\\View";
+			$class = "\\YageCMS\\Modules\\".$module."\\Views\\".$view;
 			$class = new \ReflectionClass($class);
 			
 			$moduleView = $class->newInstance();
@@ -93,6 +97,13 @@
 			{
 				$viewMethod = "Do".$action;
 			}
+			
+			/*
+			 * Before performing the action we need to load the configuration
+			 */
+
+			ConfigurationManager::Instance()->LoadGlobalModuleConfiguration($module);
+			ConfigurationManager::Instance()->LoadCustomModuleConfiguration($module);
 			
 			$result = $moduleView->$viewMethod();
 			

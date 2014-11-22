@@ -8,10 +8,15 @@
 		<MediaManager>0.1</MediaManager>
 	</Requirements>
 	
-	<!--Views>
-		<Overview>
-			<RequiredPermissions>YageCMS.Core.Module.UserManager.AccessUserManager</RequiredPermissions>
-			<RequiredPermissions>YageCMS.Core.Module.UserManager.AccessOverview</RequiredPermissions>
-		</Overview>
-	</Views-->
+	<Views>
+		<View>Overview</View>
+	</Views>
+	
+	<Setups>
+		<Setup>usermanager-overview</Setup>
+	</Setups>
+	
+	<Templates>
+		<Template>usermanager-overview</Template>
+	</Templates>
 </ModuleConfiguration>

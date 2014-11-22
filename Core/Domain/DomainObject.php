@@ -113,7 +113,7 @@
 		 * @version 1.0
 		 * @since 1.0
 		 * 
-		 * @return boolean
+		 * @return integer
 		 */
 		public function Create()
 		{
@@ -126,7 +126,10 @@
 			$type = strtolower($this->GetType());
 			$values = $this->GetChangedValues();
 			
-			return DomainObjectAccess::Create($type, $values);
+			$id = DomainObjectAccess::Create($type, $values);
+			$this->ID = $id;
+			
+			return true;
 		}
 		
 		/**

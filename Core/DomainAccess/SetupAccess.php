@@ -6,7 +6,7 @@
 	    \YageCMS\Core\Domain\DomainObject,
 	    \YageCMS\Core\DatabaseInterface\Access,
 	    \YageCMS\Core\DatabaseInterface\Record,
-	    \YageCMS\Core\Exception\UserNotFoundException,
+	    \YageCMS\Core\Exception\SetupNotFoundException,
 	    \YageCMS\Core\Tools\LogManager;
 	
 	class SetupAccess

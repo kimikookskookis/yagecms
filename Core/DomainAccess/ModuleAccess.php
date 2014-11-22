@@ -1,12 +1,13 @@
 <?php
 	namespace YageCMS\Core\DomainAccess;
 	
-	use YageCMS\Core\Domain\Module;
-	use YageCMS\Core\Domain\DomainObject;
-	use YageCMS\Core\DatabaseInterface\Access;
-	use YageCMS\Core\DatabaseInterface\Record;
-	use YageCMS\Core\Exception\UserNotFoundException;
-	use YageCMS\Core\Tools\LogManager;
+	use YageCMS\Core\Domain\Module,
+	    YageCMS\Core\Domain\Website,
+	    YageCMS\Core\Domain\DomainObject,
+	    YageCMS\Core\DatabaseInterface\Access,
+	    YageCMS\Core\DatabaseInterface\Record,
+	    YageCMS\Core\Exception\ModuleNotFoundException,
+	    YageCMS\Core\Tools\LogManager;
 	
 	class ModuleAccess
 	{
@@ -56,7 +57,7 @@
 			}
 			
 			$sqlQuery = "SELECT * FROM module WHERE name = :value AND website = :website AND deleted = '9999-12-31 23:59:59'";
-			$result = Access::Instance()->ReadSingle($sqlQuery, array("value" => $value, "Website" => Website::GetCurrentWebsite()));
+			$result = Access::Instance()->ReadSingle($sqlQuery, array("value" => $value, "website" => Website::GetCurrentWebsite()));
 			
 			if(!$result)
 			{

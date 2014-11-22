@@ -1,12 +1,12 @@
 <?php
-	namespace YageCMS\Modules\UserManager\Views\Overview;
+	namespace YageCMS\Modules\UserManager\Views;
 	
 	use \YageCMS\Core\Tools\Module\ModuleView,
 	    \YageCMS\Core\Domain\Template,
 	    \YageCMS\Core\Tools\ConfigurationManager,
 	    \YageCMS\Core\DomainAccess\SetupAccess;
 	
-	class View extends ModuleView
+	class Overview extends ModuleView
 	{
 		public function DoDefault()
 		{
@@ -23,6 +23,8 @@
 			print $template->VarDump(true);
 			return "Hi";*/
 			
+			
+			/*
 			$moduleViewSetup = ConfigurationManager::Instance()->GetParameter("YageCMS.Core.CustomSetup.Overview","module-usermanager");
 			
 			if(!$moduleViewSetup)
@@ -33,7 +35,7 @@
 			$setup = SetupAccess::Instance()->GetByID($moduleViewSetup);
 			
 			$setup->AddToSection("YageCMS.Core.ModuleView", $this);
-			
+			*/
 			$output = $this->LoadSetup();
 			
 			return $output;

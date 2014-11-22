@@ -1,10 +1,11 @@
 <?php
 	namespace YageCMS\Core\Tools;
 	
-	use \YageCMS\Core\Domain\Website;
-	use \YageCMS\Core\Domain\User;
-	use \YageCMS\Core\DomainAccess\ConfigurationParameterAccess;
-	use \YageCMS\Core\Exception\NoConfigurationParametersFoundByScopevalueException;
+	use \YageCMS\Core\Domain\Website,
+	    \YageCMS\Core\Domain\User,
+	    \YageCMS\Core\DomainAccess\ConfigurationParameterAccess,
+	    \YageCMS\Core\DomainAccess\ModuleAccess,
+	    \YageCMS\Core\Exception\NoConfigurationParametersFoundByScopevalueException;
 	
 	class ConfigurationManager
 	{
@@ -166,10 +167,6 @@
 					{
 						//ignore
 					}
-					catch(\Exception $e)
-					{
-						var_dump($e);
-					}
 					
 					if(count($parameters))
 					{
@@ -223,48 +220,68 @@
 			}
 		}
 		
-		/*
-		 * if(count($parameters))
-				{
-					foreach($parameters as $parameter)
-					{
-						$namespace = strtolower($parameter->Scope);
-						
-						if(!is_null($parameter->ScopeValue))
-						{
-							switch($parameter->SCOPE)
-							{
-								// The following scopes require no identifier for their namespace
-								case "LOCAL":
-								case "USER":
-									break;
-									
-								default:
-									$namespace .= ":".$parameter->ScopeValue;
-									break;
-							}
-						}
-						
-						$path = $parameter->name;
-						$value = $parameter->value;
-						
-						$value = preg_replace_callback("#\{\\$([a-zA-Z0-9_]+):([a-zA-Z0-9\._]+)\}#", array($this,"ReplaceParameterReferences"), $value);
-						
-						$this->parameters[$namespace][$path] = $value;
-					}
-				}*/
-		
-		private function LoadModuleConfiguration($module)
+		public function LoadGlobalModuleConfiguration($module)
 		{
-			$namespace = $module;
+			$namespace = "Module:".$module;
+			
+			$module = ModuleAccess::Instance()->GetByName($module);
+			$hostname = Website::GetCurrentWebsite()->Hostname;
 			
 			$this->parameters[$namespace] = array();
 			
-			$path = "Configuration/Modules/".$module."/Configuration/Configuration.xml";
+			$paths = array();
 			
-			$this->ImportConfigurationFile($path, $namespace);
+			if($module->Location == "CORE")
+			{
+				$paths[] = "Core/Modules/".$module->Name."/Configuration/Configuration.xml";
+			}
+			
+			$paths[] = "Configuration/Modules/".$module->Name."/Configuration/Configuration.xml";
+			$paths[] = "Configuration/".$hostname."/Modules/".$module->Name."/Configuration/Configuration.xml";
+			
+			foreach($paths as $path)
+			{
+				if(!file_exists($path))
+					continue;
+				
+				$this->ImportConfigurationFile($path, $namespace);
+			}
 			
 			LogManager::_("Configuration for Module '".$module."' imported");
+		}
+		
+		public function LoadCustomModuleConfiguration($module)
+		{
+			$path = "Database:Module-".$module;
+				
+			if(!in_array($path, $this->imported) && !is_null(User::GetCurrentUser()))
+			{
+				$parameters = null;
+		
+				try
+				{
+					$parameters = ConfigurationParameterAccess::Instance()->GetByScopeValue("MODULE", $module);
+				}
+				catch(NoConfigurationParametersFoundByScopevalueException $e)
+				{
+					//ignore
+				}
+		
+				if(count($parameters))
+				{
+					$namespace = "module-".$module;
+						
+					foreach($parameters as $parameter)
+					{
+						$path = $parameter->name;
+						$value = $parameter->value;
+		
+						$value = preg_replace_callback("#\{\\$([a-zA-Z0-9_]+):([a-zA-Z0-9\._]+)\}#", array($this,"ReplaceParameterReferences"), $value);
+		
+						$this->parameters[$namespace][$path] = $value;
+					}
+				}
+			}
 		}
 		
 		private function ImportConfigurationFile($path, $namespace)

@@ -65,11 +65,11 @@
 		}
 		
 		/**
-		 * @param string $value
+		 * @param object $value
 		 */
 		private function SetValue($value)
 		{
-			$this->value = $value;
+			$this->value = (string) $value;
 		}
 		
 		# Expiration

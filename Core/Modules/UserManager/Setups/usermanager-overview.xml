@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Setup>
+	<Template>usermanager-overview</Template>
+	
+	<Plugins>
+		<Plugin section="sectionName" plugin="text" position="first">
+			<Text><![CDATA[<p>Lorem ipsum</p>]]></Text>
+		</Plugin>
+	</Plugins>
+</Setup>

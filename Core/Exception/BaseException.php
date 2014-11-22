@@ -51,4 +51,23 @@
 	 */
 	
 	class WebsiteNotFoundException extends BaseException {}
+	
+	/*
+	 * URI Handlers
+	 */
+	
+	class NoURIHandlersFoundException extends BaseException {}
+	class NoURIHandlerFoundForPatternException extends BaseException {}
+	
+	/*
+	 * Setup
+	 */
+	
+	class SetupNotFoundException extends BaseException {}
+	
+	/*
+	 * Module
+	 */
+	
+	class ModuleNotFoundException extends BaseException {}
 ?>

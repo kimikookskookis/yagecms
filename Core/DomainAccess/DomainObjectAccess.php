@@ -31,7 +31,7 @@
 		public function Create($type, $values)
 		{
 			$sqlQuery = "INSERT INTO ".$type." (".implode(", ",array_keys($values)).") VALUES (:".implode(", :",array_keys($values)).")";
-			$result = Access::Instance()->Execute($sqlQuery, $values);
+			$result = Access::Instance()->Insert($sqlQuery, $values);
 			
 			return $result;
 		}

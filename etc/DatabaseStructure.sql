@@ -100,7 +100,7 @@ CREATE TABLE `configurationparameter` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `website` int(10) unsigned NOT NULL,
   `scope` varchar(50) NOT NULL,
-  `scopevalue` int(10) unsigned DEFAULT NULL,
+  `scopevalue` varchar(50) CHARACTER SET ascii DEFAULT NULL,
   `name` varchar(255) CHARACTER SET ascii NOT NULL,
   `value` varchar(255) NOT NULL,
   `created` datetime NOT NULL,

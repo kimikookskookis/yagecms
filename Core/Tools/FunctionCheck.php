@@ -183,6 +183,11 @@
 				{
 					$isLastAllowedType = ($typeNum+1 == count($allowedTypes) ? true : false);
 					
+					if($allowedType == 'object')
+					{
+						return true;
+					}
+					
 					if(in_array($allowedType,array('integer','string','boolean','float')))
 					{
 						if($realType <> $allowedType)

@@ -5,7 +5,7 @@
 			name="GlobalPath"
 			pattern="/global-%module%-%view%.html"
 			method="GET"
-			handler="YageCMS.Core.Tools.ModuleView->CallModule"
+			handler="YageCMS.Core.Tools.Module.ModuleView->CallModuleView"
 			position="first">
 		<Parameter name="module" pattern="([a-zA-Z0-9_]+)" />
 		<Parameter name="view" pattern="([a-zA-Z0-9_]+)" />

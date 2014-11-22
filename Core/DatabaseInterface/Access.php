@@ -178,6 +178,25 @@
 			return ($statement ? true : false);
 		}
 		
+		public function Insert($sqlQuery, $parameters = array(), $connection = "default")
+		{
+			$statement = null;
+			
+			try
+			{
+				$statement = $this->PrepareQuery($sqlQuery, $parameters, $connection);
+			}
+			catch(\Exception $e)
+			{
+				throw $e;
+			}
+			
+			$connection = ConnectionManager::Instance()->GetConnection($connection);
+			$id = (int) $connection->PDO->lastInsertId();
+			
+			return $id;
+		}
+		
 		  //
 		 // VARIABLES
 		//
